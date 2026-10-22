@@ -7,6 +7,7 @@ class ColumnProfile:
     name: str
     physical_type: str
     semantic_type: str
+    role: str
 
     count: int
     missing_count: int
@@ -24,6 +25,7 @@ class ColumnProfile:
             "name": self.name,
             "physical_type": self.physical_type,
             "semantic_type": self.semantic_type,
+            "role": self.role,
             "count": self.count,
             "missing_count": self.missing_count,
             "missing_percentage": self.missing_percentage,

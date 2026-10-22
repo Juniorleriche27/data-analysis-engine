@@ -3,6 +3,7 @@ from typing import Any
 import pandas as pd
 
 from data_analysis_engine.datasets.dataset import Dataset
+from data_analysis_engine.profiling.config import ProfilerConfig
 from data_analysis_engine.profiling.models import (
     ColumnProfile,
     DatasetProfile,
@@ -11,8 +12,14 @@ from data_analysis_engine.profiling.models import (
 
 class DataProfiler:
     """
-    Inspects a dataset before analytical methods are selected.
+    Inspects datasets before analytical methods are selected.
     """
+
+    def __init__(
+        self,
+        config: ProfilerConfig | None = None,
+    ) -> None:
+        self.config = config or ProfilerConfig()
 
     def profile(self, dataset: Dataset) -> DatasetProfile:
         dataframe = dataset.data
@@ -37,7 +44,9 @@ class DataProfiler:
             )
 
         if dataframe.empty:
-            warnings.append("Dataset contains no rows.")
+            warnings.append(
+                "Dataset contains no rows."
+            )
 
         return DatasetProfile(
             row_count=dataset.row_count,
@@ -55,8 +64,11 @@ class DataProfiler:
         series: pd.Series,
     ) -> ColumnProfile:
         row_count = len(series)
+        non_missing = series.dropna()
 
-        missing_count = int(series.isna().sum())
+        missing_count = int(
+            series.isna().sum()
+        )
 
         missing_percentage = (
             (missing_count / row_count) * 100
@@ -64,14 +76,28 @@ class DataProfiler:
             else 0.0
         )
 
-        non_missing = series.dropna()
-
         unique_count = int(
             non_missing.nunique()
         )
 
+        is_unique = (
+            unique_count == len(non_missing)
+            and len(non_missing) > 0
+        )
+
+        is_constant = (
+            unique_count <= 1
+            and len(non_missing) > 0
+        )
+
         semantic_type = self._infer_semantic_type(
             series
+        )
+
+        role = self._infer_role(
+            name=name,
+            semantic_type=semantic_type,
+            is_unique=is_unique,
         )
 
         warnings: list[str] = []
@@ -81,32 +107,41 @@ class DataProfiler:
                 f"{missing_count} missing value(s)."
             )
 
-        if unique_count <= 1 and len(non_missing) > 0:
+        if (
+            missing_percentage
+            >= self.config.high_missing_percentage_warning
+        ):
+            warnings.append(
+                "High percentage of missing values."
+            )
+
+        if is_constant:
             warnings.append(
                 "Column is constant."
+            )
+
+        if role == "identifier":
+            warnings.append(
+                "Column appears to be an identifier."
             )
 
         statistics = self._statistics(
             series=series,
             semantic_type=semantic_type,
+            role=role,
         )
 
         return ColumnProfile(
             name=name,
             physical_type=str(series.dtype),
             semantic_type=semantic_type,
+            role=role,
             count=row_count,
             missing_count=missing_count,
             missing_percentage=missing_percentage,
             unique_count=unique_count,
-            is_constant=(
-                unique_count <= 1
-                and len(non_missing) > 0
-            ),
-            is_unique=(
-                unique_count == len(non_missing)
-                and len(non_missing) > 0
-            ),
+            is_constant=is_constant,
+            is_unique=is_unique,
             statistics=statistics,
             warnings=warnings,
         )
@@ -129,7 +164,10 @@ class DataProfiler:
         if non_missing.empty:
             return "unknown"
 
-        unique_count = int(non_missing.nunique())
+        unique_count = int(
+            non_missing.nunique()
+        )
+
         row_count = len(non_missing)
 
         unique_ratio = (
@@ -138,30 +176,82 @@ class DataProfiler:
             else 0.0
         )
 
-        # Small datasets need a more tolerant threshold.
-        # Example:
-        # ["North", "South", "North", "South"]
-        # has 50% unique values but is clearly categorical.
-        if row_count <= 20:
-            if unique_ratio <= 0.50:
+        if (
+            row_count
+            <= self.config.small_dataset_max_rows
+        ):
+            if (
+                unique_ratio
+                <= self.config.small_dataset_categorical_ratio_threshold
+            ):
                 return "categorical"
-        elif unique_ratio <= 0.20:
+
+        elif (
+            unique_ratio
+            <= self.config.categorical_ratio_threshold
+        ):
             return "categorical"
 
         return "text"
+
+    def _infer_role(
+        self,
+        *,
+        name: str,
+        semantic_type: str,
+        is_unique: bool,
+    ) -> str:
+        normalized_name = name.lower().strip()
+
+        identifier_names = {
+            "id",
+            "uuid",
+            "guid",
+            "identifier",
+        }
+
+        looks_like_identifier = (
+            normalized_name in identifier_names
+            or normalized_name.endswith("_id")
+            or normalized_name.startswith("id_")
+        )
+
+        if is_unique and looks_like_identifier:
+            return "identifier"
+
+        if semantic_type == "datetime":
+            return "time"
+
+        if semantic_type == "numeric":
+            return "measure"
+
+        if semantic_type in {
+            "categorical",
+            "boolean",
+        }:
+            return "dimension"
+
+        if semantic_type == "text":
+            return "text"
+
+        return "unknown"
 
     def _statistics(
         self,
         *,
         series: pd.Series,
         semantic_type: str,
+        role: str,
     ) -> dict[str, Any]:
         non_missing = series.dropna()
 
         if non_missing.empty:
             return {}
 
-        if semantic_type == "numeric":
+        if (
+            semantic_type == "numeric"
+            and role != "identifier"
+        ):
             return {
                 "mean": float(non_missing.mean()),
                 "median": float(non_missing.median()),
@@ -185,7 +275,11 @@ class DataProfiler:
             "boolean",
             "text",
         }:
-            counts = non_missing.astype(str).value_counts()
+            counts = (
+                non_missing
+                .astype(str)
+                .value_counts()
+            )
 
             return {
                 "most_frequent": (

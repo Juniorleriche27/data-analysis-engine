@@ -98,3 +98,68 @@ def test_unique_small_text_column_is_text():
     profile = DataProfiler().profile(dataset)
 
     assert profile.columns[0].semantic_type == "text"
+
+
+def test_identifier_is_detected():
+    dataframe = pd.DataFrame(
+        {
+            "customer_id": [101, 102, 103, 104],
+            "sales": [10, 20, 30, 40],
+        }
+    )
+
+    dataset = DatasetLoader.from_dataframe(dataframe)
+    profile = DataProfiler().profile(dataset)
+
+    columns = {
+        column.name: column
+        for column in profile.columns
+    }
+
+    assert columns["customer_id"].semantic_type == "numeric"
+    assert columns["customer_id"].role == "identifier"
+    assert columns["customer_id"].statistics == {}
+
+    assert columns["sales"].role == "measure"
+
+
+def test_datetime_role_is_detected():
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.to_datetime(
+                [
+                    "2026-01-01",
+                    "2026-01-02",
+                    "2026-01-03",
+                ]
+            )
+        }
+    )
+
+    dataset = DatasetLoader.from_dataframe(dataframe)
+    profile = DataProfiler().profile(dataset)
+
+    column = profile.columns[0]
+
+    assert column.semantic_type == "datetime"
+    assert column.role == "time"
+
+
+def test_high_missing_values_warning():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [
+                100,
+                None,
+                None,
+                None,
+            ]
+        }
+    )
+
+    dataset = DatasetLoader.from_dataframe(dataframe)
+    profile = DataProfiler().profile(dataset)
+
+    warnings = profile.columns[0].warnings
+
+    assert "High percentage of missing values." in warnings
