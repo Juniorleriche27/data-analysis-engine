@@ -1,4 +1,8 @@
 from data_analysis_engine.core.registry import registry
+from data_analysis_engine.engines.statistics.correlation import (
+    PearsonCorrelation,
+    SpearmanCorrelation,
+)
 from data_analysis_engine.engines.statistics.descriptive import (
     DescriptiveStatistics,
 )
@@ -6,6 +10,8 @@ from data_analysis_engine.engines.statistics.descriptive import (
 
 BUILTIN_METHODS = (
     DescriptiveStatistics,
+    PearsonCorrelation,
+    SpearmanCorrelation,
 )
 
 
