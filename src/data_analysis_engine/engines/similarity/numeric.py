@@ -13,10 +13,6 @@ def _validate_vectors(
     x: Any,
     y: Any,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """
-    Validate two numerical vectors.
-    """
-
     if x is None or y is None:
         raise InvalidAnalysisInputError(
             "'x' and 'y' are required."
@@ -59,10 +55,7 @@ def _validate_vectors(
                         np.floating,
                     ),
                 )
-                or isinstance(
-                    value,
-                    (bool, np.bool_),
-                )
+                or isinstance(value, (bool, np.bool_))
             ):
                 raise InvalidAnalysisInputError(
                     f"'{name}' must contain only numerical values."
@@ -82,10 +75,7 @@ def _validate_vectors(
             dtype=float,
         )
 
-    return (
-        validate(x, "x"),
-        validate(y, "y"),
-    )
+    return validate(x, "x"), validate(y, "y")
 
 
 class EuclideanDistance(AnalysisMethod):
@@ -109,12 +99,10 @@ class EuclideanDistance(AnalysisMethod):
             kwargs.get("y"),
         )
 
-        distance = float(
-            np.linalg.norm(x - y)
-        )
-
         return {
-            "distance": distance,
+            "distance": float(
+                np.linalg.norm(x - y)
+            ),
             "dimension": len(x),
         }
 
@@ -140,14 +128,10 @@ class ManhattanDistance(AnalysisMethod):
             kwargs.get("y"),
         )
 
-        distance = float(
-            np.sum(
-                np.abs(x - y)
-            )
-        )
-
         return {
-            "distance": distance,
+            "distance": float(
+                np.sum(np.abs(x - y))
+            ),
             "dimension": len(x),
         }
 
@@ -186,10 +170,7 @@ class MinkowskiDistance(AnalysisMethod):
                     np.floating,
                 ),
             )
-            or isinstance(
-                p,
-                (bool, np.bool_),
-            )
+            or isinstance(p, (bool, np.bool_))
         ):
             raise InvalidAnalysisInputError(
                 "'p' must be numerical."
@@ -202,14 +183,12 @@ class MinkowskiDistance(AnalysisMethod):
                 "'p' must be finite and greater than or equal to 1."
             )
 
-        distance = float(
-            np.sum(
-                np.abs(x - y) ** p
-            ) ** (1.0 / p)
-        )
-
         return {
-            "distance": distance,
+            "distance": float(
+                np.sum(
+                    np.abs(x - y) ** p
+                ) ** (1.0 / p)
+            ),
             "dimension": len(x),
             "p": p,
         }
@@ -219,13 +198,8 @@ def _cosine_similarity(
     x: np.ndarray,
     y: np.ndarray,
 ) -> float:
-    x_norm = float(
-        np.linalg.norm(x)
-    )
-
-    y_norm = float(
-        np.linalg.norm(y)
-    )
+    x_norm = float(np.linalg.norm(x))
+    y_norm = float(np.linalg.norm(y))
 
     if x_norm == 0 or y_norm == 0:
         raise InvalidAnalysisInputError(
@@ -237,8 +211,6 @@ def _cosine_similarity(
         / (x_norm * y_norm)
     )
 
-    # Protect against tiny floating-point overflow
-    # outside the theoretical [-1, 1] interval.
     return float(
         np.clip(
             similarity,
@@ -254,8 +226,7 @@ class CosineSimilarity(AnalysisMethod):
     version = "1.0"
 
     description = (
-        "Measure angular similarity between "
-        "two numerical vectors."
+        "Measure angular similarity between two numerical vectors."
     )
 
     supported_roles = ("measure",)
@@ -285,8 +256,7 @@ class CosineDistance(AnalysisMethod):
     version = "1.0"
 
     description = (
-        "Compute cosine distance as one minus "
-        "cosine similarity."
+        "Compute cosine distance as one minus cosine similarity."
     )
 
     supported_roles = ("measure",)

@@ -18,16 +18,10 @@ class AnalysisMethod(ABC):
 
     selection_mode: str = "per_column"
 
-    # Semantic interpretation of selected data.
-    #
-    # column:
-    #   ordinary analytical variable(s)
-    #
-    # vector:
-    #   each selected column is interpreted as a vector
-    #
-    # matrix:
-    #   selected columns jointly form a matrix
+    # How selected data should be interpreted:
+    # column -> analytical variable
+    # vector -> complete numerical vector
+    # matrix -> several columns considered jointly
     analysis_unit: str = "column"
 
     allow_constant_columns: bool = False

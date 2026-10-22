@@ -13,10 +13,7 @@ def test_euclidean_distance():
         y=[3, 4],
     )
 
-    assert (
-        result.result["distance"]
-        == pytest.approx(5.0)
-    )
+    assert result.result["distance"] == pytest.approx(5.0)
 
 
 def test_manhattan_distance():
@@ -26,10 +23,7 @@ def test_manhattan_distance():
         y=[3, 4],
     )
 
-    assert (
-        result.result["distance"]
-        == pytest.approx(7.0)
-    )
+    assert result.result["distance"] == pytest.approx(7.0)
 
 
 def test_minkowski_distance():
@@ -40,20 +34,15 @@ def test_minkowski_distance():
         p=3,
     )
 
-    assert (
-        result.result["distance"]
-        == pytest.approx(
-            91 ** (1 / 3)
-        )
+    assert result.result["distance"] == pytest.approx(
+        91 ** (1 / 3)
     )
 
     assert result.result["p"] == 3.0
 
 
 def test_minkowski_rejects_invalid_p():
-    with pytest.raises(
-        InvalidAnalysisInputError
-    ):
+    with pytest.raises(InvalidAnalysisInputError):
         DataAnalysisEngine().analyze(
             "minkowski_distance",
             x=[1, 2],
@@ -69,10 +58,7 @@ def test_cosine_similarity_same_direction():
         y=[2, 4, 6],
     )
 
-    assert (
-        result.result["similarity"]
-        == pytest.approx(1.0)
-    )
+    assert result.result["similarity"] == pytest.approx(1.0)
 
 
 def test_cosine_distance_for_orthogonal_vectors():
@@ -82,21 +68,12 @@ def test_cosine_distance_for_orthogonal_vectors():
         y=[0, 1],
     )
 
-    assert (
-        result.result["similarity"]
-        == pytest.approx(0.0)
-    )
-
-    assert (
-        result.result["distance"]
-        == pytest.approx(1.0)
-    )
+    assert result.result["similarity"] == pytest.approx(0.0)
+    assert result.result["distance"] == pytest.approx(1.0)
 
 
 def test_cosine_rejects_zero_vector():
-    with pytest.raises(
-        InvalidAnalysisInputError
-    ):
+    with pytest.raises(InvalidAnalysisInputError):
         DataAnalysisEngine().analyze(
             "cosine_similarity",
             x=[0, 0, 0],
