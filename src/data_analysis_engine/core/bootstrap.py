@@ -1,4 +1,5 @@
 from data_analysis_engine.core.registry import registry
+
 from data_analysis_engine.engines.multivariate.covariance import (
     CovarianceMatrix,
     LinearCombinationVariance,
@@ -6,6 +7,7 @@ from data_analysis_engine.engines.multivariate.covariance import (
 from data_analysis_engine.engines.multivariate.pca import (
     PrincipalComponentAnalysis,
 )
+
 from data_analysis_engine.engines.similarity.numeric import (
     CosineDistance,
     CosineSimilarity,
@@ -13,6 +15,7 @@ from data_analysis_engine.engines.similarity.numeric import (
     ManhattanDistance,
     MinkowskiDistance,
 )
+
 from data_analysis_engine.engines.statistics.correlation import (
     PearsonCorrelation,
     SpearmanCorrelation,
@@ -20,6 +23,7 @@ from data_analysis_engine.engines.statistics.correlation import (
 from data_analysis_engine.engines.statistics.descriptive import (
     DescriptiveStatistics,
 )
+
 from data_analysis_engine.engines.timeseries.basic import (
     Autocorrelation,
     AutocorrelationFunction,
@@ -27,6 +31,9 @@ from data_analysis_engine.engines.timeseries.basic import (
     LogReturns,
     RollingStatistics,
     SimpleReturns,
+)
+from data_analysis_engine.engines.timeseries.cross_correlation import (
+    CrossCorrelation,
 )
 from data_analysis_engine.engines.timeseries.dtw import (
     DynamicTimeWarping,
@@ -52,6 +59,7 @@ BUILTIN_METHODS = (
     LaggedSeries,
     AutocorrelationFunction,
     DynamicTimeWarping,
+    CrossCorrelation,
 )
 
 

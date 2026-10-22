@@ -634,3 +634,39 @@ def test_router_discovers_dtw_with_time_and_two_measures():
         "time": 1,
         "measure": 2,
     }
+
+
+def test_router_discovers_cross_correlation():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.to_datetime(
+                    [
+                        "2026-01-01",
+                        "2026-01-02",
+                        "2026-01-03",
+                        "2026-01-04",
+                    ]
+                ),
+                "sales": [10, 20, 30, 40],
+                "profit": [3, 5, 9, 12],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method: item
+        for item in report.candidates
+    }
+
+    assert "cross_correlation" in candidates
+
+    assert candidates[
+        "cross_correlation"
+    ].selection_mode == "time_series_pairwise"

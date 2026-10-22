@@ -6,6 +6,9 @@ from data_analysis_engine.engines.timeseries.basic import (
     RollingStatistics,
     SimpleReturns,
 )
+from data_analysis_engine.engines.timeseries.cross_correlation import (
+    CrossCorrelation,
+)
 from data_analysis_engine.engines.timeseries.dtw import (
     DynamicTimeWarping,
 )
@@ -18,4 +21,5 @@ __all__ = [
     "LaggedSeries",
     "AutocorrelationFunction",
     "DynamicTimeWarping",
+    "CrossCorrelation",
 ]

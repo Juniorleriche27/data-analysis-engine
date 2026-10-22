@@ -412,3 +412,62 @@ def test_pipeline_executes_extended_time_series_methods():
     assert executed[
         "autocorrelation_function"
     ].status == "success"
+
+
+def test_pipeline_executes_cross_correlation():
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=8,
+                freq="D",
+            ),
+            "x": [
+                1,
+                4,
+                2,
+                8,
+                3,
+                7,
+                5,
+                9,
+            ],
+            "y": [
+                0,
+                1,
+                4,
+                2,
+                8,
+                3,
+                7,
+                5,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "cross_correlation",
+        ],
+        parameters_by_method={
+            "cross_correlation": {
+                "max_lag": 2,
+            }
+        },
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    strongest = result.result[
+        "result"
+    ]["strongest_relationship"]
+
+    assert strongest["lag"] == 1
+
+    assert (
+        strongest["direction"]
+        == "x_leads_y"
+    )
