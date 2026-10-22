@@ -56,6 +56,9 @@ from data_analysis_engine.engines.timeseries.dtw import (
 from data_analysis_engine.engines.timeseries.stability import (
     TimeSeriesStabilityDiagnostic,
 )
+from data_analysis_engine.engines.timeseries.temporal_structure import (
+    TemporalStructureDiagnostic,
+)
 from data_analysis_engine.engines.timeseries.trend import (
     LinearDetrend,
     LinearTrend,
@@ -102,6 +105,7 @@ BUILTIN_METHODS = (
     VarianceShiftChangePoint,
     RollingZScoreAnomaly,
     RollingMADAnomaly,
+    TemporalStructureDiagnostic,
 )
 
 

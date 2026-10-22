@@ -179,6 +179,21 @@ class AnalysisExecutor:
                 original_rows - len(cleaned),
             )
 
+        if task.selection_mode == "time_axis":
+            cleaned = selected.dropna()
+
+            time_column = task.columns[0]
+
+            return (
+                {
+                    "time": self._series_to_python_list(
+                        cleaned[time_column]
+                    ),
+                },
+                len(cleaned),
+                original_rows - len(cleaned),
+            )
+
         if task.selection_mode == "time_series_pairwise":
             cleaned = selected.dropna()
 
@@ -266,6 +281,7 @@ class AnalysisExecutor:
             "per_column": {"values"},
             "pairwise": {"x", "y"},
             "joint": {"data"},
+            "time_axis": {"time"},
             "time_series": {"time", "values"},
             "time_series_pairwise": {"x", "y"},
         }

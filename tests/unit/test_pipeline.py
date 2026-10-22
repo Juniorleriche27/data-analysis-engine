@@ -848,3 +848,51 @@ def test_pipeline_executes_temporal_anomaly_detection():
     ].result["result"][
         "anomaly_count"
     ] == 1
+
+
+def test_pipeline_executes_temporal_structure_diagnostic():
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.to_datetime(
+                [
+                    "2026-01-03",
+                    "2026-01-01",
+                    "2026-01-02",
+                    "2026-01-04",
+                ]
+            ),
+            "value": [
+                30,
+                10,
+                20,
+                40,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "temporal_structure_diagnostic",
+        ],
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    assert result.columns == [
+        "date"
+    ]
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert diagnostic[
+        "input_monotonic_increasing"
+    ] is False
+
+    assert diagnostic[
+        "status"
+    ] == "regular"

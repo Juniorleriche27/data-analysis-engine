@@ -46,6 +46,26 @@ class AnalysisPlanner:
                     in candidate.compatible_columns
                 )
 
+            elif candidate.selection_mode == "time_axis":
+                time_columns = [
+                    column
+                    for column
+                    in candidate.compatible_columns
+                    if candidate.compatible_column_roles[
+                        column
+                    ] == "time"
+                ]
+
+                tasks.extend(
+                    AnalysisTask(
+                        method=candidate.method,
+                        category=candidate.category,
+                        selection_mode="time_axis",
+                        columns=[column],
+                    )
+                    for column in time_columns
+                )
+
             elif candidate.selection_mode == "pairwise":
                 tasks.extend(
                     AnalysisTask(

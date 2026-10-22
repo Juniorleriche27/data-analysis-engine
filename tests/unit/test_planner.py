@@ -228,3 +228,40 @@ def test_dtw_planner_creates_time_series_pairs():
         "sales",
         "profit",
     ]
+
+
+def test_temporal_structure_planner_creates_time_axis_task():
+    plan = build_plan(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=4,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    20,
+                    30,
+                    40,
+                ],
+            }
+        )
+    )
+
+    tasks = [
+        task
+        for task in plan.tasks
+        if (
+            task.method
+            == "temporal_structure_diagnostic"
+        )
+    ]
+
+    assert len(tasks) == 1
+
+    assert tasks[0].selection_mode == "time_axis"
+
+    assert tasks[0].columns == [
+        "date"
+    ]

@@ -859,3 +859,47 @@ def test_router_discovers_temporal_anomaly_methods():
         "rolling_mad_anomaly"
         in candidates
     )
+
+
+def test_router_discovers_temporal_structure_diagnostic():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=4,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    20,
+                    30,
+                    40,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method: item
+        for item in report.candidates
+    }
+
+    candidate = candidates[
+        "temporal_structure_diagnostic"
+    ]
+
+    assert (
+        candidate.selection_mode
+        == "time_axis"
+    )
+
+    assert candidate.compatible_columns == [
+        "date"
+    ]
