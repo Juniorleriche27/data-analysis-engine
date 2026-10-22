@@ -1,4 +1,8 @@
 from data_analysis_engine.core.registry import registry
+from data_analysis_engine.engines.multivariate.covariance import (
+    CovarianceMatrix,
+    LinearCombinationVariance,
+)
 from data_analysis_engine.engines.statistics.correlation import (
     PearsonCorrelation,
     SpearmanCorrelation,
@@ -12,6 +16,8 @@ BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
     SpearmanCorrelation,
+    CovarianceMatrix,
+    LinearCombinationVariance,
 )
 
 

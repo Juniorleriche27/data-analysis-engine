@@ -181,3 +181,62 @@ def test_correlations_require_at_least_two_measures():
 
     assert "pearson_correlation" in rejected
     assert "spearman_correlation" in rejected
+
+
+def test_router_discovers_multivariate_methods():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [10, 20, 30, 40],
+                "profit": [3, 4, 8, 15],
+                "customer_id": [101, 102, 103, 104],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(profile)
+
+    candidates = {
+        candidate.method: candidate
+        for candidate in report.candidates
+    }
+
+    assert "covariance_matrix" in candidates
+    assert "linear_combination_variance" in candidates
+
+    assert (
+        candidates["covariance_matrix"].selection_mode
+        == "joint"
+    )
+
+    assert set(
+        candidates["covariance_matrix"].compatible_columns
+    ) == {
+        "sales",
+        "profit",
+    }
+
+
+def test_multivariate_methods_require_multiple_measures():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [10, 20, 30, 40],
+                "customer_id": [101, 102, 103, 104],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(profile)
+
+    rejected = {
+        rejection.method
+        for rejection in report.rejected
+    }
+
+    assert "covariance_matrix" in rejected
+    assert "linear_combination_variance" in rejected
