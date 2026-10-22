@@ -631,3 +631,54 @@ def test_pipeline_executes_linear_trend_and_detrend():
     ].result["result"][
         "slope"
     ] == pytest.approx(2.0)
+
+
+def test_pipeline_executes_stability_diagnostic():
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=10,
+                freq="D",
+            ),
+            "value": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "time_series_stability_diagnostic",
+        ],
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert (
+        diagnostic[
+            "formal_stationarity_test"
+        ]
+        is False
+    )
+
+    assert (
+        diagnostic["assessment"]
+        == "instability_signals_detected"
+    )

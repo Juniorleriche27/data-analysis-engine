@@ -20,6 +20,9 @@ from data_analysis_engine.engines.timeseries.differencing import (
 from data_analysis_engine.engines.timeseries.dtw import (
     DynamicTimeWarping,
 )
+from data_analysis_engine.engines.timeseries.stability import (
+    TimeSeriesStabilityDiagnostic,
+)
 from data_analysis_engine.engines.timeseries.trend import (
     LinearDetrend,
     LinearTrend,
@@ -40,4 +43,5 @@ __all__ = [
     "AdditiveSeasonalDecomposition",
     "LinearTrend",
     "LinearDetrend",
+    "TimeSeriesStabilityDiagnostic",
 ]
