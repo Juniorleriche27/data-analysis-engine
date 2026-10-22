@@ -22,6 +22,8 @@ from data_analysis_engine.engines.statistics.descriptive import (
 )
 from data_analysis_engine.engines.timeseries.basic import (
     Autocorrelation,
+    AutocorrelationFunction,
+    LaggedSeries,
     LogReturns,
     RollingStatistics,
     SimpleReturns,
@@ -44,6 +46,8 @@ BUILTIN_METHODS = (
     LogReturns,
     RollingStatistics,
     Autocorrelation,
+    LaggedSeries,
+    AutocorrelationFunction,
 )
 
 

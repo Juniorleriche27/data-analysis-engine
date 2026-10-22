@@ -330,3 +330,157 @@ class Autocorrelation(_TimeSeriesMethod):
             "paired_observations": len(left),
             "coefficient": coefficient,
         }
+
+
+class LaggedSeries(_TimeSeriesMethod):
+    name = "lagged_series"
+    version = "1.0"
+
+    description = (
+        "Construct aligned current and lagged observations "
+        "for an ordered numerical time series."
+    )
+
+    def execute(self, **kwargs: Any) -> dict[str, Any]:
+        time, values = _validate_time_series(
+            kwargs.get("time"),
+            kwargs.get("values"),
+        )
+
+        lag = kwargs.get(
+            "lag",
+            1,
+        )
+
+        if (
+            not isinstance(lag, int)
+            or isinstance(lag, bool)
+        ):
+            raise InvalidAnalysisInputError(
+                "'lag' must be an integer."
+            )
+
+        if lag < 1:
+            raise InvalidAnalysisInputError(
+                "'lag' must be at least 1."
+            )
+
+        if lag >= len(values):
+            raise InvalidAnalysisInputError(
+                "'lag' must be smaller than the series length."
+            )
+
+        records: list[dict[str, Any]] = []
+
+        for index in range(
+            lag,
+            len(values),
+        ):
+            records.append(
+                {
+                    "timestamp": _serialize_time(
+                        time[index]
+                    ),
+                    "value": float(
+                        values[index]
+                    ),
+                    "lagged_timestamp": _serialize_time(
+                        time[index - lag]
+                    ),
+                    "lagged_value": float(
+                        values[index - lag]
+                    ),
+                }
+            )
+
+        return {
+            "lag": lag,
+            "sample_size": len(values),
+            "paired_observations": len(records),
+            "records": records,
+        }
+
+
+class AutocorrelationFunction(_TimeSeriesMethod):
+    name = "autocorrelation_function"
+    version = "1.0"
+
+    description = (
+        "Compute sample autocorrelation coefficients "
+        "for multiple positive lags."
+    )
+
+    def execute(self, **kwargs: Any) -> dict[str, Any]:
+        _, values = _validate_time_series(
+            kwargs.get("time"),
+            kwargs.get("values"),
+        )
+
+        default_max_lag = min(
+            10,
+            len(values) - 2,
+        )
+
+        max_lag = kwargs.get(
+            "max_lag",
+            default_max_lag,
+        )
+
+        if (
+            not isinstance(max_lag, int)
+            or isinstance(max_lag, bool)
+        ):
+            raise InvalidAnalysisInputError(
+                "'max_lag' must be an integer."
+            )
+
+        if max_lag < 1:
+            raise InvalidAnalysisInputError(
+                "'max_lag' must be at least 1."
+            )
+
+        if max_lag > len(values) - 2:
+            raise InvalidAnalysisInputError(
+                "'max_lag' must leave at least two "
+                "paired observations."
+            )
+
+        coefficients: list[dict[str, Any]] = []
+
+        for lag in range(
+            1,
+            max_lag + 1,
+        ):
+            left = values[:-lag]
+            right = values[lag:]
+
+            defined = not (
+                np.all(left == left[0])
+                or np.all(right == right[0])
+            )
+
+            coefficient = (
+                float(
+                    np.corrcoef(
+                        left,
+                        right,
+                    )[0, 1]
+                )
+                if defined
+                else None
+            )
+
+            coefficients.append(
+                {
+                    "lag": lag,
+                    "paired_observations": len(left),
+                    "coefficient": coefficient,
+                    "defined": defined,
+                }
+            )
+
+        return {
+            "sample_size": len(values),
+            "max_lag": max_lag,
+            "autocorrelations": coefficients,
+        }

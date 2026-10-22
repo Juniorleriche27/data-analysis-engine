@@ -563,3 +563,35 @@ def test_router_rejects_time_series_without_time_column():
 
     assert "simple_returns" in rejected
     assert "autocorrelation" in rejected
+
+
+def test_router_discovers_extended_time_series_methods():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.to_datetime(
+                    [
+                        "2026-01-01",
+                        "2026-01-02",
+                        "2026-01-03",
+                        "2026-01-04",
+                    ]
+                ),
+                "sales": [10, 20, 30, 40],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate in report.candidates
+    }
+
+    assert "lagged_series" in candidates
+    assert "autocorrelation_function" in candidates

@@ -358,3 +358,57 @@ def test_pipeline_executes_time_series_in_chronological_order():
             0.10,
         ]
     )
+
+
+def test_pipeline_executes_extended_time_series_methods():
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.to_datetime(
+                [
+                    "2026-01-01",
+                    "2026-01-02",
+                    "2026-01-03",
+                    "2026-01-04",
+                    "2026-01-05",
+                    "2026-01-06",
+                ]
+            ),
+            "price": [
+                100,
+                103,
+                107,
+                106,
+                112,
+                118,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "lagged_series",
+            "autocorrelation_function",
+        ],
+        parameters_by_method={
+            "lagged_series": {
+                "lag": 2,
+            },
+            "autocorrelation_function": {
+                "max_lag": 3,
+            },
+        },
+    )
+
+    executed = {
+        item.method: item
+        for item in report.execution.results
+    }
+
+    assert executed[
+        "lagged_series"
+    ].status == "success"
+
+    assert executed[
+        "autocorrelation_function"
+    ].status == "success"

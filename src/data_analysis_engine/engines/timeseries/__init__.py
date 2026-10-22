@@ -1,5 +1,7 @@
 from data_analysis_engine.engines.timeseries.basic import (
     Autocorrelation,
+    AutocorrelationFunction,
+    LaggedSeries,
     LogReturns,
     RollingStatistics,
     SimpleReturns,
@@ -10,4 +12,6 @@ __all__ = [
     "LogReturns",
     "RollingStatistics",
     "Autocorrelation",
+    "LaggedSeries",
+    "AutocorrelationFunction",
 ]

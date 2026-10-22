@@ -73,3 +73,97 @@ def test_autocorrelation():
     assert result.result[
         "coefficient"
     ] == pytest.approx(1.0)
+
+
+def test_lagged_series():
+    result = DataAnalysisEngine().analyze(
+        "lagged_series",
+        time=["t1", "t2", "t3", "t4"],
+        values=[10, 20, 30, 40],
+        lag=1,
+    )
+
+    records = result.result["records"]
+
+    assert result.result["paired_observations"] == 3
+
+    assert records[0] == {
+        "timestamp": "t2",
+        "value": 20.0,
+        "lagged_timestamp": "t1",
+        "lagged_value": 10.0,
+    }
+
+
+def test_lagged_series_with_lag_two():
+    result = DataAnalysisEngine().analyze(
+        "lagged_series",
+        time=["t1", "t2", "t3", "t4", "t5"],
+        values=[10, 20, 30, 40, 50],
+        lag=2,
+    )
+
+    assert (
+        result.result["paired_observations"]
+        == 3
+    )
+
+    assert (
+        result.result["records"][0]["lagged_value"]
+        == pytest.approx(10.0)
+    )
+
+    assert (
+        result.result["records"][0]["value"]
+        == pytest.approx(30.0)
+    )
+
+
+def test_lagged_series_rejects_invalid_lag():
+    with pytest.raises(
+        InvalidAnalysisInputError
+    ):
+        DataAnalysisEngine().analyze(
+            "lagged_series",
+            time=["t1", "t2", "t3"],
+            values=[10, 20, 30],
+            lag=3,
+        )
+
+
+def test_autocorrelation_function():
+    result = DataAnalysisEngine().analyze(
+        "autocorrelation_function",
+        time=[
+            "t1",
+            "t2",
+            "t3",
+            "t4",
+            "t5",
+            "t6",
+        ],
+        values=[1, 2, 3, 4, 5, 6],
+        max_lag=3,
+    )
+
+    acf = result.result[
+        "autocorrelations"
+    ]
+
+    assert len(acf) == 3
+
+    assert acf[0]["coefficient"] == pytest.approx(1.0)
+    assert acf[1]["coefficient"] == pytest.approx(1.0)
+    assert acf[2]["coefficient"] == pytest.approx(1.0)
+
+
+def test_autocorrelation_function_rejects_excessive_lag():
+    with pytest.raises(
+        InvalidAnalysisInputError
+    ):
+        DataAnalysisEngine().analyze(
+            "autocorrelation_function",
+            time=["t1", "t2", "t3", "t4"],
+            values=[1, 2, 3, 4],
+            max_lag=3,
+        )
