@@ -740,3 +740,41 @@ def test_router_discovers_volatility_methods():
 
     assert "rolling_volatility" in candidates
     assert "ewma_volatility" in candidates
+
+
+def test_router_discovers_mean_shift_change_point():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=6,
+                    freq="D",
+                ),
+                "value": [
+                    1,
+                    1,
+                    1,
+                    10,
+                    10,
+                    10,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item in report.candidates
+    }
+
+    assert (
+        "mean_shift_change_point"
+        in candidates
+    )

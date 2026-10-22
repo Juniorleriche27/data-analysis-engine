@@ -682,3 +682,55 @@ def test_pipeline_executes_stability_diagnostic():
         diagnostic["assessment"]
         == "instability_signals_detected"
     )
+
+
+def test_pipeline_executes_mean_shift_change_point():
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.to_datetime(
+                [
+                    "2026-01-06",
+                    "2026-01-01",
+                    "2026-01-02",
+                    "2026-01-03",
+                    "2026-01-04",
+                    "2026-01-05",
+                    "2026-01-07",
+                    "2026-01-08",
+                ]
+            ),
+            "value": [
+                10,
+                0,
+                0,
+                0,
+                0,
+                10,
+                10,
+                10,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "mean_shift_change_point",
+        ],
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert diagnostic[
+        "detected"
+    ] is True
+
+    assert diagnostic[
+        "change_timestamp"
+    ] == "2026-01-05T00:00:00"

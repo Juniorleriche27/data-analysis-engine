@@ -32,6 +32,9 @@ from data_analysis_engine.engines.timeseries.basic import (
     RollingStatistics,
     SimpleReturns,
 )
+from data_analysis_engine.engines.timeseries.change_points import (
+    MeanShiftChangePoint,
+)
 from data_analysis_engine.engines.timeseries.cross_correlation import (
     CrossCorrelation,
 )
@@ -88,6 +91,7 @@ BUILTIN_METHODS = (
     TimeSeriesStabilityDiagnostic,
     RollingVolatility,
     EWMAVolatility,
+    MeanShiftChangePoint,
 )
 
 
