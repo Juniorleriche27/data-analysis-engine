@@ -6,6 +6,9 @@ from data_analysis_engine.engines.multivariate.covariance import (
 from data_analysis_engine.engines.multivariate.pca import (
     PrincipalComponentAnalysis,
 )
+from data_analysis_engine.engines.multivariate.pca import (
+    PrincipalComponentAnalysis,
+)
 from data_analysis_engine.engines.similarity.numeric import (
     CosineDistance,
     CosineSimilarity,

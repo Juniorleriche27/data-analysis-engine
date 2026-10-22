@@ -445,3 +445,51 @@ def test_router_discovers_pca_automatically():
         "customer_id"
         not in pca.compatible_columns
     )
+
+
+def test_router_discovers_pca_automatically():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [10, 20, 30, 40],
+                "profit": [3, 7, 8, 14],
+                "cost": [8, 13, 23, 29],
+                "customer_id": [101, 102, 103, 104],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method: candidate
+        for candidate in report.candidates
+    }
+
+    assert (
+        "principal_component_analysis"
+        in candidates
+    )
+
+    pca = candidates[
+        "principal_component_analysis"
+    ]
+
+    assert pca.selection_mode == "joint"
+
+    assert set(
+        pca.compatible_columns
+    ) == {
+        "sales",
+        "profit",
+        "cost",
+    }
+
+    assert (
+        "customer_id"
+        not in pca.compatible_columns
+    )

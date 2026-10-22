@@ -276,3 +276,44 @@ def test_pipeline_preserves_default_all_methods_behavior():
     assert "pearson_correlation" in executed
     assert "spearman_correlation" in executed
     assert "principal_component_analysis" in executed
+
+
+def test_pipeline_executes_pca_automatically():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [10, 20, 30, 40],
+            "profit": [2, 5, 8, 12],
+            "cost": [8, 15, 22, 28],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe
+    )
+
+    pca = next(
+        item
+        for item in report.execution.results
+        if (
+            item.method
+            == "principal_component_analysis"
+        )
+    )
+
+    assert pca.status == "success"
+
+    assert (
+        pca.result["result"][
+            "variable_count"
+        ]
+        == 3
+    )
+
+    assert (
+        sum(
+            pca.result["result"][
+                "explained_variance_ratio"
+            ]
+        )
+        == pytest.approx(1.0)
+    )
