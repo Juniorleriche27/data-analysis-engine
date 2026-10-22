@@ -3,6 +3,9 @@ from data_analysis_engine.engines.multivariate.covariance import (
     CovarianceMatrix,
     LinearCombinationVariance,
 )
+from data_analysis_engine.engines.multivariate.pca import (
+    PrincipalComponentAnalysis,
+)
 from data_analysis_engine.engines.similarity.numeric import (
     CosineDistance,
     CosineSimilarity,
@@ -25,6 +28,7 @@ BUILTIN_METHODS = (
     SpearmanCorrelation,
     CovarianceMatrix,
     LinearCombinationVariance,
+    PrincipalComponentAnalysis,
     EuclideanDistance,
     ManhattanDistance,
     MinkowskiDistance,

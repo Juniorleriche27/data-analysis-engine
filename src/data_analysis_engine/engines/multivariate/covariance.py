@@ -132,6 +132,7 @@ class CovarianceMatrix(AnalysisMethod):
     supported_roles = ("measure",)
     minimum_compatible_columns = 2
     selection_mode = "joint"
+    analysis_unit = "matrix"
     allow_constant_columns = False
 
     def execute(self, **kwargs: Any) -> dict[str, Any]:
@@ -166,6 +167,7 @@ class LinearCombinationVariance(AnalysisMethod):
     supported_roles = ("measure",)
     minimum_compatible_columns = 2
     selection_mode = "joint"
+    analysis_unit = "matrix"
     allow_constant_columns = False
 
     def execute(self, **kwargs: Any) -> dict[str, Any]:
