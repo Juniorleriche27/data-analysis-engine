@@ -976,3 +976,83 @@ def test_router_discovers_forecast_backtest():
         "rolling_origin_forecast_backtest"
         in candidates
     )
+
+
+def test_router_discovers_autoregressive_forecast():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=8,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    12,
+                    11,
+                    14,
+                    13,
+                    16,
+                    15,
+                    18,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item in report.candidates
+    }
+
+    assert (
+        "autoregressive_forecast"
+        in candidates
+    )
+
+
+def test_router_discovers_autoregressive_forecast():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=8,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    12,
+                    11,
+                    14,
+                    13,
+                    16,
+                    15,
+                    18,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item in report.candidates
+    }
+
+    assert (
+        "autoregressive_forecast"
+        in candidates
+    )

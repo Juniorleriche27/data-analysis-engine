@@ -1021,3 +1021,60 @@ def test_pipeline_executes_forecast_backtest():
     ]["mae"] == pytest.approx(
         0.0
     )
+
+
+def test_pipeline_executes_autoregressive_forecast():
+    values = [
+        10.0
+    ]
+
+    for _ in range(7):
+        values.append(
+            2.0
+            + 0.5
+            * values[-1]
+        )
+
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=len(values),
+                freq="D",
+            ),
+            "value": values,
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "autoregressive_forecast",
+        ],
+        parameters_by_method={
+            "autoregressive_forecast": {
+                "p": 1,
+                "horizon": 2,
+            }
+        },
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    forecast = result.result[
+        "result"
+    ]
+
+    assert forecast[
+        "coefficients"
+    ]["lag_1"] == pytest.approx(
+        0.5
+    )
+
+    assert len(
+        forecast[
+            "forecast_values"
+        ]
+    ) == 2
