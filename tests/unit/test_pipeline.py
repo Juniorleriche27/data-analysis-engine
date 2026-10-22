@@ -734,3 +734,56 @@ def test_pipeline_executes_mean_shift_change_point():
     assert diagnostic[
         "change_timestamp"
     ] == "2026-01-05T00:00:00"
+
+
+def test_pipeline_executes_variance_shift_change_point():
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=12,
+                freq="D",
+            ),
+            "value": [
+                -1,
+                1,
+                -1,
+                1,
+                -1,
+                1,
+                -10,
+                10,
+                -10,
+                10,
+                -10,
+                10,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "variance_shift_change_point",
+        ],
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert diagnostic[
+        "detected"
+    ] is True
+
+    assert diagnostic[
+        "change_timestamp"
+    ] == "2026-01-07T00:00:00"
+
+    assert diagnostic[
+        "direction"
+    ] == "variance_increase"

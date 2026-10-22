@@ -56,6 +56,9 @@ from data_analysis_engine.engines.timeseries.trend import (
     LinearDetrend,
     LinearTrend,
 )
+from data_analysis_engine.engines.timeseries.variance_change import (
+    VarianceShiftChangePoint,
+)
 from data_analysis_engine.engines.timeseries.volatility import (
     EWMAVolatility,
     RollingVolatility,
@@ -92,6 +95,7 @@ BUILTIN_METHODS = (
     RollingVolatility,
     EWMAVolatility,
     MeanShiftChangePoint,
+    VarianceShiftChangePoint,
 )
 
 
