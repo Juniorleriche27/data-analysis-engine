@@ -531,3 +531,57 @@ def test_pipeline_executes_differencing_methods():
             5,
         ]
     )
+
+
+def test_pipeline_executes_additive_decomposition():
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=12,
+                freq="D",
+            ),
+            "value": [
+                12,
+                10,
+                10,
+                14,
+                16,
+                14,
+                14,
+                18,
+                20,
+                18,
+                18,
+                22,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "additive_seasonal_decomposition",
+        ],
+        parameters_by_method={
+            "additive_seasonal_decomposition": {
+                "period": 4,
+            }
+        },
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    decomposition = result.result[
+        "result"
+    ]
+
+    assert decomposition[
+        "model"
+    ] == "additive"
+
+    assert decomposition[
+        "period"
+    ] == 4

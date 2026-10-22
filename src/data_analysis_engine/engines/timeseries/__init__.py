@@ -9,6 +9,10 @@ from data_analysis_engine.engines.timeseries.basic import (
 from data_analysis_engine.engines.timeseries.cross_correlation import (
     CrossCorrelation,
 )
+from data_analysis_engine.engines.timeseries.decomposition import (
+    AdditiveSeasonalDecomposition,
+    MovingAverageTrend,
+)
 from data_analysis_engine.engines.timeseries.differencing import (
     FirstDifference,
     SeasonalDifference,
@@ -28,4 +32,6 @@ __all__ = [
     "CrossCorrelation",
     "FirstDifference",
     "SeasonalDifference",
+    "MovingAverageTrend",
+    "AdditiveSeasonalDecomposition",
 ]
