@@ -471,3 +471,63 @@ def test_pipeline_executes_cross_correlation():
         strongest["direction"]
         == "x_leads_y"
     )
+
+
+def test_pipeline_executes_differencing_methods():
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=6,
+                freq="D",
+            ),
+            "value": [
+                10,
+                20,
+                30,
+                15,
+                25,
+                35,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "first_difference",
+            "seasonal_difference",
+        ],
+        parameters_by_method={
+            "seasonal_difference": {
+                "period": 3,
+            }
+        },
+    )
+
+    results = {
+        item.method: item
+        for item in report.execution.results
+    }
+
+    assert results[
+        "first_difference"
+    ].status == "success"
+
+    assert results[
+        "seasonal_difference"
+    ].status == "success"
+
+    seasonal = results[
+        "seasonal_difference"
+    ].result["result"]
+
+    assert seasonal[
+        "differences"
+    ] == pytest.approx(
+        [
+            5,
+            5,
+            5,
+        ]
+    )
