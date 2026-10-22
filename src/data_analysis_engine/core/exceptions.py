@@ -12,3 +12,9 @@ class MethodAlreadyRegisteredError(DataAnalysisError):
 
 class InvalidAnalysisInputError(DataAnalysisError):
     pass
+
+
+class PlanDatasetMismatchError(DataAnalysisError):
+    """Raised when an analysis plan belongs to another dataset."""
+
+    pass

@@ -1,3 +1,10 @@
+from data_analysis_engine.orchestration.execution_models import (
+    ExecutionReport,
+    TaskExecutionResult,
+)
+from data_analysis_engine.orchestration.executor import (
+    AnalysisExecutor,
+)
 from data_analysis_engine.orchestration.planner import (
     AnalysisPlanner,
 )
@@ -14,4 +21,7 @@ __all__ = [
     "AnalysisPlanner",
     "AnalysisPlan",
     "AnalysisTask",
+    "AnalysisExecutor",
+    "ExecutionReport",
+    "TaskExecutionResult",
 ]
