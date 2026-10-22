@@ -185,3 +185,94 @@ def test_pipeline_executes_pca_automatically():
         )
         == pytest.approx(1.0)
     )
+
+
+def test_pipeline_can_execute_only_selected_methods():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [10, 20, 30, 40],
+            "profit": [2, 5, 8, 11],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "pearson_correlation",
+        ],
+    )
+
+    assert len(
+        report.execution.results
+    ) == 1
+
+    assert (
+        report.execution.results[0].method
+        == "pearson_correlation"
+    )
+
+
+def test_pipeline_can_select_multiple_methods():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [10, 20, 30, 40],
+            "profit": [2, 5, 8, 11],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "pearson_correlation",
+            "spearman_correlation",
+        ],
+    )
+
+    executed = {
+        item.method
+        for item in report.execution.results
+    }
+
+    assert executed == {
+        "pearson_correlation",
+        "spearman_correlation",
+    }
+
+
+def test_pipeline_rejects_unknown_method():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [10, 20, 30],
+            "profit": [2, 5, 8],
+        }
+    )
+
+    with pytest.raises(Exception):
+        DataAnalysisPipeline().analyze_dataframe(
+            dataframe,
+            methods=[
+                "method_that_does_not_exist",
+            ],
+        )
+
+
+def test_pipeline_preserves_default_all_methods_behavior():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [10, 20, 30, 40],
+            "profit": [2, 5, 8, 11],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe
+    )
+
+    executed = {
+        item.method
+        for item in report.execution.results
+    }
+
+    assert "pearson_correlation" in executed
+    assert "spearman_correlation" in executed
+    assert "principal_component_analysis" in executed

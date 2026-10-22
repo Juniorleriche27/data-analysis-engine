@@ -1,22 +1,31 @@
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 import pandas as pd
 
-from data_analysis_engine.analysis_report import DatasetAnalysisReport
-from data_analysis_engine.datasets import Dataset, DatasetLoader
-from data_analysis_engine.engine import DataAnalysisEngine
+from data_analysis_engine.analysis_report import (
+    DatasetAnalysisReport,
+)
+from data_analysis_engine.datasets import (
+    Dataset,
+    DatasetLoader,
+)
+from data_analysis_engine.engine import (
+    DataAnalysisEngine,
+)
 from data_analysis_engine.orchestration import (
     AnalysisExecutor,
     AnalysisPlanner,
     AnalyticalRouter,
 )
-from data_analysis_engine.profiling import DataProfiler
+from data_analysis_engine.profiling import (
+    DataProfiler,
+)
 
 
 class DataAnalysisPipeline:
     """
-    End-to-end framework-independent data analysis pipeline.
+    High-level framework-independent analytical pipeline.
     """
 
     def __init__(
@@ -31,19 +40,34 @@ class DataAnalysisPipeline:
         self.profiler = profiler or DataProfiler()
         self.router = router or AnalyticalRouter()
         self.planner = planner or AnalysisPlanner()
-        self.executor = executor or AnalysisExecutor(self.engine)
+        self.executor = (
+            executor
+            or AnalysisExecutor(self.engine)
+        )
 
     def analyze_dataset(
         self,
         dataset: Dataset,
         *,
-        parameters_by_method: dict[str, dict[str, Any]] | None = None,
+        methods: Iterable[str] | None = None,
+        parameters_by_method: dict[
+            str,
+            dict[str, Any],
+        ]
+        | None = None,
     ) -> DatasetAnalysisReport:
-        profile = self.profiler.profile(dataset)
+        profile = self.profiler.profile(
+            dataset
+        )
 
-        routing = self.router.route(profile)
+        routing = self.router.route(
+            profile
+        )
 
-        plan = self.planner.plan(routing)
+        plan = self.planner.plan(
+            routing,
+            methods=methods,
+        )
 
         execution = self.executor.execute(
             dataset,
@@ -67,7 +91,12 @@ class DataAnalysisPipeline:
         *,
         name: str | None = None,
         source: str | None = None,
-        parameters_by_method: dict[str, dict[str, Any]] | None = None,
+        methods: Iterable[str] | None = None,
+        parameters_by_method: dict[
+            str,
+            dict[str, Any],
+        ]
+        | None = None,
     ) -> DatasetAnalysisReport:
         dataset = DatasetLoader.from_dataframe(
             dataframe,
@@ -77,6 +106,7 @@ class DataAnalysisPipeline:
 
         return self.analyze_dataset(
             dataset,
+            methods=methods,
             parameters_by_method=parameters_by_method,
         )
 
@@ -85,7 +115,12 @@ class DataAnalysisPipeline:
         path: str | Path,
         *,
         name: str | None = None,
-        parameters_by_method: dict[str, dict[str, Any]] | None = None,
+        methods: Iterable[str] | None = None,
+        parameters_by_method: dict[
+            str,
+            dict[str, Any],
+        ]
+        | None = None,
         **read_csv_options: Any,
     ) -> DatasetAnalysisReport:
         dataset = DatasetLoader.from_csv(
@@ -96,5 +131,6 @@ class DataAnalysisPipeline:
 
         return self.analyze_dataset(
             dataset,
+            methods=methods,
             parameters_by_method=parameters_by_method,
         )
