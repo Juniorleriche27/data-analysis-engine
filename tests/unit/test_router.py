@@ -938,3 +938,41 @@ def test_router_discovers_forecasting_baselines():
 
     assert "naive_forecast" in candidates
     assert "drift_forecast" in candidates
+
+
+def test_router_discovers_forecast_backtest():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=6,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    12,
+                    14,
+                    16,
+                    18,
+                    20,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item in report.candidates
+    }
+
+    assert (
+        "rolling_origin_forecast_backtest"
+        in candidates
+    )

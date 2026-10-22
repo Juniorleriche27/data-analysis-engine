@@ -27,6 +27,9 @@ from data_analysis_engine.engines.timeseries.differencing import (
 from data_analysis_engine.engines.timeseries.dtw import (
     DynamicTimeWarping,
 )
+from data_analysis_engine.engines.timeseries.forecast_evaluation import (
+    RollingOriginForecastBacktest,
+)
 from data_analysis_engine.engines.timeseries.forecasting import (
     DriftForecast,
     NaiveForecast,
@@ -74,4 +77,5 @@ __all__ = [
     "TemporalStructureDiagnostic",
     "NaiveForecast",
     "DriftForecast",
+    "RollingOriginForecastBacktest",
 ]

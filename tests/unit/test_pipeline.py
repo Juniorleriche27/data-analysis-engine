@@ -966,3 +966,58 @@ def test_pipeline_executes_forecasting_baselines():
             22,
         ]
     )
+
+
+def test_pipeline_executes_forecast_backtest():
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=6,
+                freq="D",
+            ),
+            "value": [
+                10,
+                12,
+                14,
+                16,
+                18,
+                20,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "rolling_origin_forecast_backtest",
+        ],
+        parameters_by_method={
+            "rolling_origin_forecast_backtest": {
+                "model": "drift",
+                "initial_train_size": 3,
+                "horizon": 1,
+            }
+        },
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    backtest = result.result[
+        "result"
+    ]
+
+    assert (
+        backtest[
+            "look_ahead_leakage"
+        ]
+        is False
+    )
+
+    assert backtest[
+        "metrics"
+    ]["mae"] == pytest.approx(
+        0.0
+    )
