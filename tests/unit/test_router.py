@@ -293,3 +293,56 @@ def test_router_discovers_numeric_similarity_methods():
                 method
             ].compatible_columns
         )
+
+
+def test_router_discovers_numeric_similarity_methods():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [10, 20, 30, 40],
+                "profit": [3, 6, 8, 15],
+                "customer_id": [101, 102, 103, 104],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(profile)
+
+    candidates = {
+        candidate.method: candidate
+        for candidate in report.candidates
+    }
+
+    expected_methods = {
+        "euclidean_distance",
+        "manhattan_distance",
+        "minkowski_distance",
+        "cosine_similarity",
+        "cosine_distance",
+    }
+
+    assert expected_methods.issubset(
+        candidates.keys()
+    )
+
+    for method in expected_methods:
+        assert set(
+            candidates[method].compatible_columns
+        ) == {
+            "sales",
+            "profit",
+        }
+
+        assert (
+            candidates[method].selection_mode
+            == "pairwise"
+        )
+
+        assert (
+            "customer_id"
+            not in candidates[
+                method
+            ].compatible_columns
+        )
