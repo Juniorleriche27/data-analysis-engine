@@ -27,6 +27,10 @@ from data_analysis_engine.engines.timeseries.trend import (
     LinearDetrend,
     LinearTrend,
 )
+from data_analysis_engine.engines.timeseries.volatility import (
+    EWMAVolatility,
+    RollingVolatility,
+)
 
 __all__ = [
     "SimpleReturns",
@@ -44,4 +48,6 @@ __all__ = [
     "LinearTrend",
     "LinearDetrend",
     "TimeSeriesStabilityDiagnostic",
+    "RollingVolatility",
+    "EWMAVolatility",
 ]

@@ -705,3 +705,38 @@ def test_router_discovers_linear_trend_methods():
 
     assert "linear_trend" in candidates
     assert "linear_detrend" in candidates
+
+
+def test_router_discovers_volatility_methods():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=5,
+                    freq="D",
+                ),
+                "returns": [
+                    0.01,
+                    -0.02,
+                    0.03,
+                    -0.01,
+                    0.02,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item in report.candidates
+    }
+
+    assert "rolling_volatility" in candidates
+    assert "ewma_volatility" in candidates

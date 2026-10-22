@@ -53,6 +53,10 @@ from data_analysis_engine.engines.timeseries.trend import (
     LinearDetrend,
     LinearTrend,
 )
+from data_analysis_engine.engines.timeseries.volatility import (
+    EWMAVolatility,
+    RollingVolatility,
+)
 
 
 BUILTIN_METHODS = (
@@ -82,6 +86,8 @@ BUILTIN_METHODS = (
     LinearTrend,
     LinearDetrend,
     TimeSeriesStabilityDiagnostic,
+    RollingVolatility,
+    EWMAVolatility,
 )
 
 
