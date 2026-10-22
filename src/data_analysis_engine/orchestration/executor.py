@@ -3,7 +3,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from data_analysis_engine import DataAnalysisEngine
+from data_analysis_engine.engine import DataAnalysisEngine
 from data_analysis_engine.core.exceptions import (
     DataAnalysisError,
     InvalidAnalysisInputError,
