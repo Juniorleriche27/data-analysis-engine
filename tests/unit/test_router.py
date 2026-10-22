@@ -595,3 +595,42 @@ def test_router_discovers_extended_time_series_methods():
 
     assert "lagged_series" in candidates
     assert "autocorrelation_function" in candidates
+
+
+def test_router_discovers_dtw_with_time_and_two_measures():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.to_datetime(
+                    [
+                        "2026-01-01",
+                        "2026-01-02",
+                        "2026-01-03",
+                        "2026-01-04",
+                    ]
+                ),
+                "sales": [10, 20, 30, 40],
+                "profit": [2, 5, 8, 11],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(profile)
+
+    candidates = {
+        candidate.method: candidate
+        for candidate in report.candidates
+    }
+
+    assert "dynamic_time_warping" in candidates
+
+    dtw = candidates[
+        "dynamic_time_warping"
+    ]
+
+    assert dtw.role_requirements == {
+        "time": 1,
+        "measure": 2,
+    }

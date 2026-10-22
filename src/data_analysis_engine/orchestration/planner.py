@@ -72,6 +72,43 @@ class AnalysisPlanner:
                     )
                 )
 
+            elif candidate.selection_mode == "time_series_pairwise":
+                time_columns = [
+                    column
+                    for column
+                    in candidate.compatible_columns
+                    if candidate.compatible_column_roles[
+                        column
+                    ] == "time"
+                ]
+
+                measure_columns = [
+                    column
+                    for column
+                    in candidate.compatible_columns
+                    if candidate.compatible_column_roles[
+                        column
+                    ] == "measure"
+                ]
+
+                for time_column in time_columns:
+                    for left, right in combinations(
+                        measure_columns,
+                        2,
+                    ):
+                        tasks.append(
+                            AnalysisTask(
+                                method=candidate.method,
+                                category=candidate.category,
+                                selection_mode="time_series_pairwise",
+                                columns=[
+                                    time_column,
+                                    left,
+                                    right,
+                                ],
+                            )
+                        )
+
             elif candidate.selection_mode == "time_series":
                 time_columns = [
                     column

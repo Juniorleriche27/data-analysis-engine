@@ -195,3 +195,36 @@ def test_time_series_planner_pairs_time_with_each_measure():
         ("date", "sales"),
         ("date", "profit"),
     }
+
+
+def test_dtw_planner_creates_time_series_pairs():
+    plan = build_plan(
+        pd.DataFrame(
+            {
+                "date": pd.to_datetime(
+                    [
+                        "2026-01-01",
+                        "2026-01-02",
+                        "2026-01-03",
+                        "2026-01-04",
+                    ]
+                ),
+                "sales": [10, 20, 30, 40],
+                "profit": [2, 5, 8, 11],
+            }
+        )
+    )
+
+    tasks = [
+        task
+        for task in plan.tasks
+        if task.method == "dynamic_time_warping"
+    ]
+
+    assert len(tasks) == 1
+
+    assert tasks[0].columns == [
+        "date",
+        "sales",
+        "profit",
+    ]

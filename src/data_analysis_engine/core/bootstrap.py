@@ -28,6 +28,9 @@ from data_analysis_engine.engines.timeseries.basic import (
     RollingStatistics,
     SimpleReturns,
 )
+from data_analysis_engine.engines.timeseries.dtw import (
+    DynamicTimeWarping,
+)
 
 
 BUILTIN_METHODS = (
@@ -48,6 +51,7 @@ BUILTIN_METHODS = (
     Autocorrelation,
     LaggedSeries,
     AutocorrelationFunction,
+    DynamicTimeWarping,
 )
 
 
