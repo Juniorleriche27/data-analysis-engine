@@ -24,6 +24,10 @@ from data_analysis_engine.engines.statistics.descriptive import (
     DescriptiveStatistics,
 )
 
+from data_analysis_engine.engines.timeseries.anomalies import (
+    RollingMADAnomaly,
+    RollingZScoreAnomaly,
+)
 from data_analysis_engine.engines.timeseries.basic import (
     Autocorrelation,
     AutocorrelationFunction,
@@ -96,6 +100,8 @@ BUILTIN_METHODS = (
     EWMAVolatility,
     MeanShiftChangePoint,
     VarianceShiftChangePoint,
+    RollingZScoreAnomaly,
+    RollingMADAnomaly,
 )
 
 

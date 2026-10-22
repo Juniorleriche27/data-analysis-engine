@@ -816,3 +816,46 @@ def test_router_discovers_variance_shift_change_point():
         "variance_shift_change_point"
         in candidates
     )
+
+
+def test_router_discovers_temporal_anomaly_methods():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=6,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    11,
+                    10,
+                    12,
+                    50,
+                    11,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item in report.candidates
+    }
+
+    assert (
+        "rolling_zscore_anomaly"
+        in candidates
+    )
+
+    assert (
+        "rolling_mad_anomaly"
+        in candidates
+    )

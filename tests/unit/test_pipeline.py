@@ -787,3 +787,64 @@ def test_pipeline_executes_variance_shift_change_point():
     assert diagnostic[
         "direction"
     ] == "variance_increase"
+
+
+def test_pipeline_executes_temporal_anomaly_detection():
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=6,
+                freq="D",
+            ),
+            "value": [
+                10,
+                10,
+                10,
+                10,
+                50,
+                10,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "rolling_zscore_anomaly",
+            "rolling_mad_anomaly",
+        ],
+        parameters_by_method={
+            "rolling_zscore_anomaly": {
+                "window": 3,
+            },
+            "rolling_mad_anomaly": {
+                "window": 3,
+            },
+        },
+    )
+
+    results = {
+        item.method: item
+        for item in report.execution.results
+    }
+
+    assert results[
+        "rolling_zscore_anomaly"
+    ].status == "success"
+
+    assert results[
+        "rolling_mad_anomaly"
+    ].status == "success"
+
+    assert results[
+        "rolling_zscore_anomaly"
+    ].result["result"][
+        "anomaly_count"
+    ] == 1
+
+    assert results[
+        "rolling_mad_anomaly"
+    ].result["result"][
+        "anomaly_count"
+    ] == 1

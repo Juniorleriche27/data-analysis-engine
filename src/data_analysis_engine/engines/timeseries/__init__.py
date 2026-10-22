@@ -1,3 +1,7 @@
+from data_analysis_engine.engines.timeseries.anomalies import (
+    RollingMADAnomaly,
+    RollingZScoreAnomaly,
+)
 from data_analysis_engine.engines.timeseries.basic import (
     Autocorrelation,
     AutocorrelationFunction,
@@ -58,4 +62,6 @@ __all__ = [
     "EWMAVolatility",
     "MeanShiftChangePoint",
     "VarianceShiftChangePoint",
+    "RollingZScoreAnomaly",
+    "RollingMADAnomaly",
 ]
