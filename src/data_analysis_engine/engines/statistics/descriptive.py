@@ -10,11 +10,22 @@ class DescriptiveStatistics(AnalysisMethod):
     category = "statistics"
     version = "1.0"
 
+    description = (
+        "Compute basic descriptive statistics for a numerical measure."
+    )
+
+    supported_roles = ("measure",)
+    minimum_compatible_columns = 1
+    selection_mode = "per_column"
+    allow_constant_columns = True
+
     def execute(self, **kwargs: Any) -> dict[str, Any]:
         values = kwargs.get("values")
 
         if values is None:
-            raise InvalidAnalysisInputError("'values' is required.")
+            raise InvalidAnalysisInputError(
+                "'values' is required."
+            )
 
         if not isinstance(values, (list, tuple)):
             raise InvalidAnalysisInputError(

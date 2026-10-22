@@ -32,6 +32,9 @@ class MethodRegistry:
     def exists(self, name: str) -> bool:
         return name in self._methods
 
+    def methods(self) -> tuple[AnalysisMethod, ...]:
+        return tuple(self._methods.values())
+
     def list_methods(self) -> list[dict]:
         return [
             method.metadata()
