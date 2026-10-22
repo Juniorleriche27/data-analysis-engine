@@ -5,10 +5,6 @@ from typing import Any
 class AnalysisMethod(ABC):
     """
     Base contract implemented by every analytical capability.
-
-    Each method declares both:
-    - how it executes;
-    - what kind of analytical data it can accept.
     """
 
     name: str
@@ -20,15 +16,19 @@ class AnalysisMethod(ABC):
     supported_roles: tuple[str, ...] = ()
     minimum_compatible_columns: int = 1
 
-    # per_column:
-    #   method runs independently on each selected column.
-    #
-    # pairwise:
-    #   method requires pairs of compatible columns.
-    #
-    # joint:
-    #   method consumes several columns simultaneously.
     selection_mode: str = "per_column"
+
+    # Semantic interpretation of selected data.
+    #
+    # column:
+    #   ordinary analytical variable(s)
+    #
+    # vector:
+    #   each selected column is interpreted as a vector
+    #
+    # matrix:
+    #   selected columns jointly form a matrix
+    analysis_unit: str = "column"
 
     allow_constant_columns: bool = False
 
@@ -45,5 +45,6 @@ class AnalysisMethod(ABC):
             "supported_roles": list(self.supported_roles),
             "minimum_compatible_columns": self.minimum_compatible_columns,
             "selection_mode": self.selection_mode,
+            "analysis_unit": self.analysis_unit,
             "allow_constant_columns": self.allow_constant_columns,
         }
