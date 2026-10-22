@@ -9,7 +9,17 @@ class RoutingCandidate:
     selection_mode: str
     compatible_columns: list[str]
 
-    reasons: list[str] = field(default_factory=list)
+    compatible_column_roles: dict[str, str] = field(
+        default_factory=dict
+    )
+
+    role_requirements: dict[str, int] = field(
+        default_factory=dict
+    )
+
+    reasons: list[str] = field(
+        default_factory=list
+    )
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -17,6 +27,8 @@ class RoutingCandidate:
             "category": self.category,
             "selection_mode": self.selection_mode,
             "compatible_columns": self.compatible_columns,
+            "compatible_column_roles": self.compatible_column_roles,
+            "role_requirements": self.role_requirements,
             "reasons": self.reasons,
         }
 

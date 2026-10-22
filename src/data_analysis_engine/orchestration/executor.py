@@ -179,6 +179,30 @@ class AnalysisExecutor:
                 original_rows - len(cleaned),
             )
 
+        if task.selection_mode == "time_series":
+            cleaned = selected.dropna()
+
+            time_column = task.columns[0]
+            measure_column = task.columns[1]
+
+            cleaned = cleaned.sort_values(
+                by=time_column,
+                kind="mergesort",
+            )
+
+            return (
+                {
+                    "time": self._series_to_python_list(
+                        cleaned[time_column]
+                    ),
+                    "values": self._series_to_python_list(
+                        cleaned[measure_column]
+                    ),
+                },
+                len(cleaned),
+                original_rows - len(cleaned),
+            )
+
         if task.selection_mode == "joint":
             cleaned = selected.dropna()
 
@@ -217,6 +241,7 @@ class AnalysisExecutor:
             "per_column": {"values"},
             "pairwise": {"x", "y"},
             "joint": {"data"},
+            "time_series": {"time", "values"},
         }
 
         reserved = reserved_by_mode.get(

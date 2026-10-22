@@ -493,3 +493,73 @@ def test_router_discovers_pca_automatically():
         "customer_id"
         not in pca.compatible_columns
     )
+
+
+def test_router_discovers_time_series_methods():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.to_datetime(
+                    [
+                        "2026-01-01",
+                        "2026-01-02",
+                        "2026-01-03",
+                        "2026-01-04",
+                    ]
+                ),
+                "sales": [10, 20, 30, 40],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(profile)
+
+    candidates = {
+        candidate.method: candidate
+        for candidate in report.candidates
+    }
+
+    expected = {
+        "simple_returns",
+        "log_returns",
+        "rolling_statistics",
+        "autocorrelation",
+    }
+
+    assert expected.issubset(
+        candidates.keys()
+    )
+
+    candidate = candidates[
+        "simple_returns"
+    ]
+
+    assert candidate.role_requirements == {
+        "time": 1,
+        "measure": 1,
+    }
+
+
+def test_router_rejects_time_series_without_time_column():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [10, 20, 30, 40],
+                "profit": [2, 4, 6, 8],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(profile)
+
+    rejected = {
+        item.method
+        for item in report.rejected
+    }
+
+    assert "simple_returns" in rejected
+    assert "autocorrelation" in rejected

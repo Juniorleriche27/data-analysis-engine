@@ -14,13 +14,6 @@ from data_analysis_engine.orchestration.planning_models import (
 
 
 class AnalysisPlanner:
-    """
-    Converts analytical routing recommendations into
-    concrete executable tasks.
-
-    Optionally restricts planning to explicitly selected methods.
-    """
-
     def plan(
         self,
         routing_report: RoutingReport,
@@ -43,19 +36,27 @@ class AnalysisPlanner:
 
             if candidate.selection_mode == "per_column":
                 tasks.extend(
-                    self._build_per_column_tasks(
-                        candidate.method,
-                        candidate.category,
-                        candidate.compatible_columns,
+                    AnalysisTask(
+                        method=candidate.method,
+                        category=candidate.category,
+                        selection_mode="per_column",
+                        columns=[column],
                     )
+                    for column
+                    in candidate.compatible_columns
                 )
 
             elif candidate.selection_mode == "pairwise":
                 tasks.extend(
-                    self._build_pairwise_tasks(
-                        candidate.method,
-                        candidate.category,
+                    AnalysisTask(
+                        method=candidate.method,
+                        category=candidate.category,
+                        selection_mode="pairwise",
+                        columns=[left, right],
+                    )
+                    for left, right in combinations(
                         candidate.compatible_columns,
+                        2,
                     )
                 )
 
@@ -70,6 +71,39 @@ class AnalysisPlanner:
                         ),
                     )
                 )
+
+            elif candidate.selection_mode == "time_series":
+                time_columns = [
+                    column
+                    for column
+                    in candidate.compatible_columns
+                    if candidate.compatible_column_roles[
+                        column
+                    ] == "time"
+                ]
+
+                measure_columns = [
+                    column
+                    for column
+                    in candidate.compatible_columns
+                    if candidate.compatible_column_roles[
+                        column
+                    ] == "measure"
+                ]
+
+                for time_column in time_columns:
+                    for measure_column in measure_columns:
+                        tasks.append(
+                            AnalysisTask(
+                                method=candidate.method,
+                                category=candidate.category,
+                                selection_mode="time_series",
+                                columns=[
+                                    time_column,
+                                    measure_column,
+                                ],
+                            )
+                        )
 
             else:
                 raise InvalidAnalysisInputError(
@@ -102,7 +136,8 @@ class AnalysisPlanner:
         selected = set(methods)
 
         if not all(
-            isinstance(method, str) and method.strip()
+            isinstance(method, str)
+            and method.strip()
             for method in selected
         ):
             raise InvalidAnalysisInputError(
@@ -112,58 +147,24 @@ class AnalysisPlanner:
 
         known_methods = {
             candidate.method
-            for candidate in routing_report.candidates
+            for candidate
+            in routing_report.candidates
         }
 
         known_methods.update(
             rejection.method
-            for rejection in routing_report.rejected
+            for rejection
+            in routing_report.rejected
         )
 
-        unknown = (
-            selected
-            - known_methods
-        )
+        unknown = selected - known_methods
 
         if unknown:
             raise InvalidAnalysisInputError(
                 "Unknown analytical method(s): "
-                + ", ".join(sorted(unknown))
+                + ", ".join(
+                    sorted(unknown)
+                )
             )
 
         return selected
-
-    def _build_per_column_tasks(
-        self,
-        method: str,
-        category: str,
-        columns: list[str],
-    ) -> list[AnalysisTask]:
-        return [
-            AnalysisTask(
-                method=method,
-                category=category,
-                selection_mode="per_column",
-                columns=[column],
-            )
-            for column in columns
-        ]
-
-    def _build_pairwise_tasks(
-        self,
-        method: str,
-        category: str,
-        columns: list[str],
-    ) -> list[AnalysisTask]:
-        return [
-            AnalysisTask(
-                method=method,
-                category=category,
-                selection_mode="pairwise",
-                columns=[left, right],
-            )
-            for left, right in combinations(
-                columns,
-                2,
-            )
-        ]

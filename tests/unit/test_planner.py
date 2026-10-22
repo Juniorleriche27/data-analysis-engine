@@ -160,3 +160,38 @@ def test_plan_preserves_dataset_fingerprint():
     plan = AnalysisPlanner().plan(routing_report)
 
     assert plan.dataset_fingerprint == dataset.fingerprint()
+
+
+def test_time_series_planner_pairs_time_with_each_measure():
+    plan = build_plan(
+        pd.DataFrame(
+            {
+                "date": pd.to_datetime(
+                    [
+                        "2026-01-01",
+                        "2026-01-02",
+                        "2026-01-03",
+                        "2026-01-04",
+                    ]
+                ),
+                "sales": [10, 20, 30, 40],
+                "profit": [2, 3, 5, 8],
+            }
+        )
+    )
+
+    tasks = [
+        task
+        for task in plan.tasks
+        if task.method == "simple_returns"
+    ]
+
+    pairs = {
+        tuple(task.columns)
+        for task in tasks
+    }
+
+    assert pairs == {
+        ("date", "sales"),
+        ("date", "profit"),
+    }

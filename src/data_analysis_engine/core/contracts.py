@@ -17,12 +17,17 @@ class AnalysisMethod(ABC):
     minimum_compatible_columns: int = 1
 
     selection_mode: str = "per_column"
-
-    # How selected data should be interpreted:
-    # column -> analytical variable
-    # vector -> complete numerical vector
-    # matrix -> several columns considered jointly
     analysis_unit: str = "column"
+
+    # Exact role requirements when merely declaring
+    # supported_roles is not sufficient.
+    #
+    # Example:
+    # (("time", 1), ("measure", 1))
+    role_requirements: tuple[
+        tuple[str, int],
+        ...
+    ] = ()
 
     allow_constant_columns: bool = False
 
@@ -40,5 +45,8 @@ class AnalysisMethod(ABC):
             "minimum_compatible_columns": self.minimum_compatible_columns,
             "selection_mode": self.selection_mode,
             "analysis_unit": self.analysis_unit,
+            "role_requirements": dict(
+                self.role_requirements
+            ),
             "allow_constant_columns": self.allow_constant_columns,
         }

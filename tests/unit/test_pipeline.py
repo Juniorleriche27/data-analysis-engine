@@ -317,3 +317,44 @@ def test_pipeline_executes_pca_automatically():
         )
         == pytest.approx(1.0)
     )
+
+
+def test_pipeline_executes_time_series_in_chronological_order():
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.to_datetime(
+                [
+                    "2026-01-03",
+                    "2026-01-01",
+                    "2026-01-02",
+                ]
+            ),
+            "price": [
+                121,
+                100,
+                110,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "simple_returns",
+        ],
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    returns = result.result[
+        "result"
+    ]["returns"]
+
+    assert returns == pytest.approx(
+        [
+            0.10,
+            0.10,
+        ]
+    )

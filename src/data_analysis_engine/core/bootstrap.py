@@ -6,9 +6,6 @@ from data_analysis_engine.engines.multivariate.covariance import (
 from data_analysis_engine.engines.multivariate.pca import (
     PrincipalComponentAnalysis,
 )
-from data_analysis_engine.engines.multivariate.pca import (
-    PrincipalComponentAnalysis,
-)
 from data_analysis_engine.engines.similarity.numeric import (
     CosineDistance,
     CosineSimilarity,
@@ -22,6 +19,12 @@ from data_analysis_engine.engines.statistics.correlation import (
 )
 from data_analysis_engine.engines.statistics.descriptive import (
     DescriptiveStatistics,
+)
+from data_analysis_engine.engines.timeseries.basic import (
+    Autocorrelation,
+    LogReturns,
+    RollingStatistics,
+    SimpleReturns,
 )
 
 
@@ -37,6 +40,10 @@ BUILTIN_METHODS = (
     MinkowskiDistance,
     CosineSimilarity,
     CosineDistance,
+    SimpleReturns,
+    LogReturns,
+    RollingStatistics,
+    Autocorrelation,
 )
 
 
