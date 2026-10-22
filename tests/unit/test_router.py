@@ -903,3 +903,38 @@ def test_router_discovers_temporal_structure_diagnostic():
     assert candidate.compatible_columns == [
         "date"
     ]
+
+
+def test_router_discovers_forecasting_baselines():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=5,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    12,
+                    14,
+                    16,
+                    18,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item in report.candidates
+    }
+
+    assert "naive_forecast" in candidates
+    assert "drift_forecast" in candidates

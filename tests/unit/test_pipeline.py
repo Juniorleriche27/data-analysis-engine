@@ -896,3 +896,73 @@ def test_pipeline_executes_temporal_structure_diagnostic():
     assert diagnostic[
         "status"
     ] == "regular"
+
+
+def test_pipeline_executes_forecasting_baselines():
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=5,
+                freq="D",
+            ),
+            "value": [
+                10,
+                12,
+                14,
+                16,
+                18,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "naive_forecast",
+            "drift_forecast",
+        ],
+        parameters_by_method={
+            "naive_forecast": {
+                "horizon": 2,
+            },
+            "drift_forecast": {
+                "horizon": 2,
+            },
+        },
+    )
+
+    results = {
+        item.method: item
+        for item in report.execution.results
+    }
+
+    assert results[
+        "naive_forecast"
+    ].status == "success"
+
+    assert results[
+        "drift_forecast"
+    ].status == "success"
+
+    assert results[
+        "naive_forecast"
+    ].result["result"][
+        "forecast_values"
+    ] == pytest.approx(
+        [
+            18,
+            18,
+        ]
+    )
+
+    assert results[
+        "drift_forecast"
+    ].result["result"][
+        "forecast_values"
+    ] == pytest.approx(
+        [
+            20,
+            22,
+        ]
+    )
