@@ -670,3 +670,38 @@ def test_router_discovers_cross_correlation():
     assert candidates[
         "cross_correlation"
     ].selection_mode == "time_series_pairwise"
+
+
+def test_router_discovers_linear_trend_methods():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=5,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    12,
+                    15,
+                    17,
+                    20,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item in report.candidates
+    }
+
+    assert "linear_trend" in candidates
+    assert "linear_detrend" in candidates

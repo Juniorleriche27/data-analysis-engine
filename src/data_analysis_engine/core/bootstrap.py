@@ -46,6 +46,10 @@ from data_analysis_engine.engines.timeseries.differencing import (
 from data_analysis_engine.engines.timeseries.dtw import (
     DynamicTimeWarping,
 )
+from data_analysis_engine.engines.timeseries.trend import (
+    LinearDetrend,
+    LinearTrend,
+)
 
 
 BUILTIN_METHODS = (
@@ -72,6 +76,8 @@ BUILTIN_METHODS = (
     SeasonalDifference,
     MovingAverageTrend,
     AdditiveSeasonalDecomposition,
+    LinearTrend,
+    LinearDetrend,
 )
 
 

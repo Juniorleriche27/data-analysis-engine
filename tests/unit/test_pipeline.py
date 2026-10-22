@@ -585,3 +585,49 @@ def test_pipeline_executes_additive_decomposition():
     assert decomposition[
         "period"
     ] == 4
+
+
+def test_pipeline_executes_linear_trend_and_detrend():
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=5,
+                freq="D",
+            ),
+            "value": [
+                10,
+                12,
+                14,
+                16,
+                18,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "linear_trend",
+            "linear_detrend",
+        ],
+    )
+
+    results = {
+        item.method: item
+        for item in report.execution.results
+    }
+
+    assert results[
+        "linear_trend"
+    ].status == "success"
+
+    assert results[
+        "linear_detrend"
+    ].status == "success"
+
+    assert results[
+        "linear_trend"
+    ].result["result"][
+        "slope"
+    ] == pytest.approx(2.0)
