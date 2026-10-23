@@ -21,6 +21,10 @@ from data_analysis_engine.engines.timeseries.forecasting import (
     _recursive_seasonal_naive_forecast,
     _validate_season_length,
 )
+from data_analysis_engine.engines.timeseries.holt import (
+    _holt_linear_forecast,
+    _validate_beta,
+)
 
 
 SUPPORTED_BASELINES = (
@@ -35,6 +39,7 @@ SUPPORTED_MODELS = (
     "seasonal_naive",
     "autoregressive",
     "simple_exponential_smoothing",
+    "holt_linear_trend",
 )
 
 
@@ -66,6 +71,7 @@ def _forecast_from_history(
     p: int | None = None,
     season_length: int | None = None,
     alpha: float | None = None,
+    beta: float | None = None,
 ) -> np.ndarray:
     if model == "naive":
         return np.full(
@@ -159,6 +165,24 @@ def _forecast_from_history(
             )
         )
 
+    if model == "holt_linear_trend":
+        if alpha is None:
+            raise InvalidAnalysisInputError(
+                "Holt linear trend requires 'alpha'."
+            )
+
+        if beta is None:
+            raise InvalidAnalysisInputError(
+                "Holt linear trend requires 'beta'."
+            )
+
+        return _holt_linear_forecast(
+            history,
+            alpha=alpha,
+            beta=beta,
+            horizon=horizon,
+        )
+
     raise InvalidAnalysisInputError(
         "Unsupported forecast model: "
         f"'{model}'."
@@ -169,7 +193,10 @@ def _forecast_metrics(
     actual: np.ndarray,
     forecast: np.ndarray,
 ) -> dict[str, Any]:
-    errors = actual - forecast
+    errors = (
+        actual
+        - forecast
+    )
 
     absolute_errors = np.abs(
         errors
@@ -287,17 +314,16 @@ def _forecast_metrics(
 class RollingOriginForecastBacktest(
     AnalysisMethod
 ):
-    name = (
-        "rolling_origin_forecast_backtest"
-    )
+    name = "rolling_origin_forecast_backtest"
     category = "timeseries"
-    version = "1.3"
+    version = "1.4"
 
     description = (
         "Evaluate naive, drift, seasonal-naive, "
-        "autoregressive, or simple exponential "
-        "smoothing forecasting using expanding-window "
-        "rolling-origin backtesting without look-ahead leakage."
+        "autoregressive, simple exponential smoothing, "
+        "or Holt linear-trend forecasting using "
+        "expanding-window rolling-origin backtesting "
+        "without look-ahead leakage."
     )
 
     supported_roles = (
@@ -361,6 +387,7 @@ class RollingOriginForecastBacktest(
         p: int | None = None
         season_length: int | None = None
         alpha: float | None = None
+        beta: float | None = None
 
         model_parameters: dict[
             str,
@@ -407,6 +434,29 @@ class RollingOriginForecastBacktest(
             model_parameters[
                 "alpha"
             ] = alpha
+
+        if model == "holt_linear_trend":
+            alpha = _validate_alpha(
+                kwargs.get(
+                    "alpha",
+                    0.2,
+                )
+            )
+
+            beta = _validate_beta(
+                kwargs.get(
+                    "beta",
+                    0.1,
+                )
+            )
+
+            model_parameters[
+                "alpha"
+            ] = alpha
+
+            model_parameters[
+                "beta"
+            ] = beta
 
         initial_train_size = kwargs.get(
             "initial_train_size"
@@ -487,7 +537,6 @@ class RollingOriginForecastBacktest(
         all_forecast: list[float] = []
 
         origin_number = 0
-
         train_end = (
             initial_train_size
         )
@@ -514,6 +563,7 @@ class RollingOriginForecastBacktest(
                     p=p,
                     season_length=season_length,
                     alpha=alpha,
+                    beta=beta,
                 )
             )
 
@@ -559,7 +609,9 @@ class RollingOriginForecastBacktest(
                         "training_end_index": (
                             train_end - 1
                         ),
-                        "training_size": train_end,
+                        "training_size": (
+                            train_end
+                        ),
                         "origin_timestamp": (
                             time[
                                 train_end - 1
@@ -576,7 +628,9 @@ class RollingOriginForecastBacktest(
                                 target_index
                             ].isoformat()
                         ),
-                        "actual": actual_value,
+                        "actual": (
+                            actual_value
+                        ),
                         "forecast": (
                             forecast_value
                         ),
@@ -638,7 +692,9 @@ class RollingOriginForecastBacktest(
             "model_parameters": (
                 model_parameters
             ),
-            "sample_size": len(values),
+            "sample_size": len(
+                values
+            ),
             "initial_train_size": (
                 initial_train_size
             ),
@@ -648,7 +704,9 @@ class RollingOriginForecastBacktest(
                 interval_ns
                 / 1_000_000_000.0
             ),
-            "origin_count": origin_number,
+            "origin_count": (
+                origin_number
+            ),
             "forecast_observation_count": (
                 len(records)
             ),

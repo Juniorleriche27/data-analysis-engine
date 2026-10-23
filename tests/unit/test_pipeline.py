@@ -1450,3 +1450,52 @@ def test_pipeline_executes_ses_alpha_selection():
         ]
         is False
     )
+
+
+def test_pipeline_executes_holt_linear_trend_forecast():
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=4,
+                freq="D",
+            ),
+            "value": [
+                10,
+                12,
+                14,
+                16,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "holt_linear_trend_forecast",
+        ],
+        parameters_by_method={
+            "holt_linear_trend_forecast": {
+                "alpha": 1.0,
+                "beta": 1.0,
+                "horizon": 2,
+            }
+        },
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    forecast = result.result[
+        "result"
+    ]
+
+    assert forecast[
+        "forecast_values"
+    ] == pytest.approx(
+        [
+            18.0,
+            20.0,
+        ]
+    )

@@ -44,6 +44,9 @@ from data_analysis_engine.engines.timeseries.forecasting import (
     NaiveForecast,
     SeasonalNaiveForecast,
 )
+from data_analysis_engine.engines.timeseries.holt import (
+    HoltLinearTrendForecast,
+)
 from data_analysis_engine.engines.timeseries.smoothing_selection import (
     SimpleExponentialSmoothingAlphaSelection,
 )
@@ -96,4 +99,5 @@ __all__ = [
     "AutoregressiveOrderSelection",
     "SimpleExponentialSmoothingForecast",
     "SimpleExponentialSmoothingAlphaSelection",
+    "HoltLinearTrendForecast",
 ]
