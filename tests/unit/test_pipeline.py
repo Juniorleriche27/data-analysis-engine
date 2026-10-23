@@ -1141,3 +1141,76 @@ def test_pipeline_executes_autoregressive_backtest():
         0.0,
         abs=1e-12,
     )
+
+
+def test_pipeline_executes_autoregressive_order_selection():
+    values = [
+        100,
+        103,
+        106,
+        110,
+        113,
+        117,
+        120,
+        124,
+        128,
+        131,
+        135,
+        139,
+        142,
+        146,
+        150,
+    ]
+
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=len(values),
+                freq="D",
+            ),
+            "value": values,
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "autoregressive_order_selection",
+        ],
+        parameters_by_method={
+            "autoregressive_order_selection": {
+                "min_p": 1,
+                "max_p": 3,
+                "initial_train_size": 8,
+                "metric": "mae",
+            }
+        },
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    selection = result.result[
+        "result"
+    ]
+
+    assert selection[
+        "best_order"
+    ] in {
+        1,
+        2,
+        3,
+    }
+
+    assert selection[
+        "orders_evaluated"
+    ] == 3
+
+    assert (
+        selection[
+            "look_ahead_leakage"
+        ]
+        is False
+    )
