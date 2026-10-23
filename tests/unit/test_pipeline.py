@@ -1828,3 +1828,76 @@ def test_pipeline_executes_empirical_forecast_interval():
         ]
         is False
     )
+
+
+def test_pipeline_executes_forecast_interval_calibration():
+    values = [
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+        30,
+        32,
+    ]
+
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=len(values),
+                freq="D",
+            ),
+            "value": values,
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "forecast_interval_calibration",
+        ],
+        parameters_by_method={
+            "forecast_interval_calibration": {
+                "model": "drift",
+                "initial_train_size": 5,
+                "horizon": 1,
+                "coverage": 0.9,
+                "minimum_calibration_observations": 3,
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    calibration = result.result[
+        "result"
+    ]
+
+    assert calibration[
+        "empirical_coverage"
+    ] == pytest.approx(
+        1.0
+    )
+
+    assert calibration[
+        "nominal_coverage"
+    ] == pytest.approx(
+        0.9
+    )
+
+    assert (
+        calibration[
+            "look_ahead_leakage"
+        ]
+        is False
+    )
