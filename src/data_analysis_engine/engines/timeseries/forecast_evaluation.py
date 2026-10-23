@@ -25,6 +25,10 @@ from data_analysis_engine.engines.timeseries.holt import (
     _holt_linear_forecast,
     _validate_beta,
 )
+from data_analysis_engine.engines.timeseries.holt_winters import (
+    _holt_winters_additive_forecast,
+    _validate_gamma,
+)
 
 
 SUPPORTED_BASELINES = (
@@ -40,6 +44,7 @@ SUPPORTED_MODELS = (
     "autoregressive",
     "simple_exponential_smoothing",
     "holt_linear_trend",
+    "holt_winters_additive",
 )
 
 
@@ -72,6 +77,7 @@ def _forecast_from_history(
     season_length: int | None = None,
     alpha: float | None = None,
     beta: float | None = None,
+    gamma: float | None = None,
 ) -> np.ndarray:
     if model == "naive":
         return np.full(
@@ -180,6 +186,37 @@ def _forecast_from_history(
             history,
             alpha=alpha,
             beta=beta,
+            horizon=horizon,
+        )
+
+    if model == "holt_winters_additive":
+        if alpha is None:
+            raise InvalidAnalysisInputError(
+                "Additive Holt-Winters requires 'alpha'."
+            )
+
+        if beta is None:
+            raise InvalidAnalysisInputError(
+                "Additive Holt-Winters requires 'beta'."
+            )
+
+        if gamma is None:
+            raise InvalidAnalysisInputError(
+                "Additive Holt-Winters requires 'gamma'."
+            )
+
+        if season_length is None:
+            raise InvalidAnalysisInputError(
+                "Additive Holt-Winters requires "
+                "'season_length'."
+            )
+
+        return _holt_winters_additive_forecast(
+            history,
+            alpha=alpha,
+            beta=beta,
+            gamma=gamma,
+            season_length=season_length,
             horizon=horizon,
         )
 
@@ -316,7 +353,7 @@ class RollingOriginForecastBacktest(
 ):
     name = "rolling_origin_forecast_backtest"
     category = "timeseries"
-    version = "1.4"
+    version = "1.5"
 
     description = (
         "Evaluate naive, drift, seasonal-naive, "
@@ -388,6 +425,7 @@ class RollingOriginForecastBacktest(
         season_length: int | None = None
         alpha: float | None = None
         beta: float | None = None
+        gamma: float | None = None
 
         model_parameters: dict[
             str,
@@ -458,6 +496,48 @@ class RollingOriginForecastBacktest(
                 "beta"
             ] = beta
 
+        if model == "holt_winters_additive":
+            alpha = _validate_alpha(
+                kwargs.get(
+                    "alpha",
+                    0.2,
+                )
+            )
+
+            beta = _validate_beta(
+                kwargs.get(
+                    "beta",
+                    0.1,
+                )
+            )
+
+            gamma = _validate_gamma(
+                kwargs.get(
+                    "gamma",
+                    0.1,
+                )
+            )
+
+            season_length = (
+                _validate_season_length(
+                    kwargs.get(
+                        "season_length",
+                        7,
+                    )
+                )
+            )
+
+            model_parameters.update(
+                {
+                    "alpha": alpha,
+                    "beta": beta,
+                    "gamma": gamma,
+                    "season_length": (
+                        season_length
+                    ),
+                }
+            )
+
         initial_train_size = kwargs.get(
             "initial_train_size"
         )
@@ -471,6 +551,11 @@ class RollingOriginForecastBacktest(
             elif model == "seasonal_naive":
                 minimum_training = (
                     season_length
+                )
+
+            elif model == "holt_winters_additive":
+                minimum_training = (
+                    2 * season_length
                 )
 
             else:
@@ -519,6 +604,21 @@ class RollingOriginForecastBacktest(
                     "the seasonal length."
                 )
 
+        if model == "holt_winters_additive":
+            minimum_hw_training = (
+                2 * season_length
+            )
+
+            if (
+                initial_train_size
+                < minimum_hw_training
+            ):
+                raise InvalidAnalysisInputError(
+                    "Additive Holt-Winters rolling-origin "
+                    "backtesting requires 'initial_train_size' "
+                    "to contain at least two complete seasons."
+                )
+
         if (
             initial_train_size
             + horizon
@@ -564,6 +664,7 @@ class RollingOriginForecastBacktest(
                     season_length=season_length,
                     alpha=alpha,
                     beta=beta,
+                    gamma=gamma,
                 )
             )
 

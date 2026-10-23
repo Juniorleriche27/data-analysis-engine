@@ -1336,3 +1336,47 @@ def test_router_discovers_holt_parameter_selection():
         "holt_parameter_selection"
         in candidates
     )
+
+
+def test_router_discovers_holt_winters_additive_forecast():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=12,
+                    freq="D",
+                ),
+                "value": [
+                    110,
+                    97,
+                    109,
+                    96,
+                    118,
+                    105,
+                    117,
+                    104,
+                    126,
+                    113,
+                    125,
+                    112,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item in report.candidates
+    }
+
+    assert (
+        "holt_winters_additive_forecast"
+        in candidates
+    )

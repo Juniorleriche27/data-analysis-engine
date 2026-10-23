@@ -1583,3 +1583,70 @@ def test_pipeline_executes_holt_parameter_selection():
         ]
         is False
     )
+
+
+def test_pipeline_executes_holt_winters_additive_forecast():
+    values = [
+        110,
+        97,
+        109,
+        96,
+        118,
+        105,
+        117,
+        104,
+        126,
+        113,
+        125,
+        112,
+        134,
+        121,
+        133,
+        120,
+    ]
+
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=len(values),
+                freq="D",
+            ),
+            "value": values,
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "holt_winters_additive_forecast",
+        ],
+        parameters_by_method={
+            "holt_winters_additive_forecast": {
+                "season_length": 4,
+                "alpha": 1.0,
+                "beta": 1.0,
+                "gamma": 1.0,
+                "horizon": 4,
+            }
+        },
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    forecast = result.result[
+        "result"
+    ]
+
+    assert forecast[
+        "forecast_values"
+    ] == pytest.approx(
+        [
+            142.0,
+            129.0,
+            141.0,
+            128.0,
+        ]
+    )
