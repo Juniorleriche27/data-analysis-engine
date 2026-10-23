@@ -2345,3 +2345,74 @@ def test_pipeline_executes_automatic_forecast_reliability():
     assert reliability[
         "calibration_status"
     ] == "well_calibrated"
+
+
+def test_pipeline_executes_weighted_forecast_ensemble():
+    values = [
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+        30,
+        32,
+    ]
+
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=len(values),
+                freq="D",
+            ),
+            "value": values,
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "weighted_forecast_ensemble",
+        ],
+        parameters_by_method={
+            "weighted_forecast_ensemble": {
+                "models": [
+                    "naive",
+                    "drift",
+                ],
+                "initial_train_size": 5,
+                "horizon": 2,
+                "metric": "mae",
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    ensemble = result.result[
+        "result"
+    ]
+
+    assert ensemble[
+        "forecast_values"
+    ] == pytest.approx(
+        [
+            34.0,
+            36.0,
+        ]
+    )
+
+    assert ensemble[
+        "weights_sum"
+    ] == pytest.approx(
+        1.0
+    )

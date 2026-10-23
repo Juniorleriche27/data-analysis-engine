@@ -83,6 +83,9 @@ from data_analysis_engine.engines.timeseries.automatic_forecast_intervals import
 from data_analysis_engine.engines.timeseries.automatic_forecast_reliability import (
     AutomaticForecastReliability,
 )
+from data_analysis_engine.engines.timeseries.forecast_ensemble import (
+    WeightedForecastEnsemble,
+)
 from data_analysis_engine.engines.timeseries.interval_calibration import (
     ForecastIntervalCalibration,
 )
@@ -179,6 +182,7 @@ BUILTIN_METHODS = (
     AutomaticForecast,
     AutomaticForecastWithIntervals,
     AutomaticForecastReliability,
+    WeightedForecastEnsemble,
 )
 
 

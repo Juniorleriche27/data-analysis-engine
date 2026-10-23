@@ -1863,3 +1863,48 @@ def test_router_discovers_automatic_forecast_reliability():
         "automatic_forecast_reliability"
         in candidates
     )
+
+
+def test_router_discovers_weighted_forecast_ensemble():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=12,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    12,
+                    14,
+                    16,
+                    18,
+                    20,
+                    22,
+                    24,
+                    26,
+                    28,
+                    30,
+                    32,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item
+        in report.candidates
+    }
+
+    assert (
+        "weighted_forecast_ensemble"
+        in candidates
+    )
