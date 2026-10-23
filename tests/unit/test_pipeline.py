@@ -2416,3 +2416,76 @@ def test_pipeline_executes_weighted_forecast_ensemble():
     ] == pytest.approx(
         1.0
     )
+
+
+def test_pipeline_executes_adaptive_forecast_ensemble_backtest():
+    values = [
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+        30,
+        32,
+        34,
+        36,
+    ]
+
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=len(values),
+                freq="D",
+            ),
+            "value": values,
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "adaptive_forecast_ensemble_backtest",
+        ],
+        parameters_by_method={
+            "adaptive_forecast_ensemble_backtest": {
+                "models": [
+                    "naive",
+                    "drift",
+                ],
+                "initial_train_size": 5,
+                "horizon": 1,
+                "metric": "mae",
+                "minimum_weight_observations": 3,
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    evaluation = result.result[
+        "result"
+    ]
+
+    assert evaluation[
+        "metrics"
+    ]["mae"] == pytest.approx(
+        0.0,
+        abs=1e-12,
+    )
+
+    assert (
+        evaluation[
+            "look_ahead_leakage"
+        ]
+        is False
+    )
