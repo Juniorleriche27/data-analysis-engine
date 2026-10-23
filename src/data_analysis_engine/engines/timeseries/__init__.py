@@ -57,6 +57,9 @@ from data_analysis_engine.engines.timeseries.automatic_forecast import (
 from data_analysis_engine.engines.timeseries.automatic_forecast_intervals import (
     AutomaticForecastWithIntervals,
 )
+from data_analysis_engine.engines.timeseries.automatic_forecast_reliability import (
+    AutomaticForecastReliability,
+)
 from data_analysis_engine.engines.timeseries.interval_calibration import (
     ForecastIntervalCalibration,
 )
@@ -140,4 +143,5 @@ __all__ = [
     "ForecastModelSelection",
     "AutomaticForecast",
     "AutomaticForecastWithIntervals",
+    "AutomaticForecastReliability",
 ]
