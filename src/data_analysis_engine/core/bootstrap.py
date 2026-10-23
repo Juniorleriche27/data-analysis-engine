@@ -65,6 +65,9 @@ from data_analysis_engine.engines.timeseries.forecast_evaluation import (
 from data_analysis_engine.engines.timeseries.forecast_intervals import (
     EmpiricalForecastInterval,
 )
+from data_analysis_engine.engines.timeseries.conformal_intervals import (
+    ConformalForecastInterval,
+)
 from data_analysis_engine.engines.timeseries.interval_calibration import (
     ForecastIntervalCalibration,
 )
@@ -155,6 +158,7 @@ BUILTIN_METHODS = (
     HoltWintersAdditiveParameterSelection,
     EmpiricalForecastInterval,
     ForecastIntervalCalibration,
+    ConformalForecastInterval,
 )
 
 

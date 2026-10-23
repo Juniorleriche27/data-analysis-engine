@@ -1901,3 +1901,68 @@ def test_pipeline_executes_forecast_interval_calibration():
         ]
         is False
     )
+
+
+def test_pipeline_executes_conformal_forecast_interval():
+    values = [
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+    ]
+
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=len(values),
+                freq="D",
+            ),
+            "value": values,
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "conformal_forecast_interval",
+        ],
+        parameters_by_method={
+            "conformal_forecast_interval": {
+                "model": "drift",
+                "initial_train_size": 5,
+                "horizon": 1,
+                "coverage": 0.8,
+                "minimum_calibration_observations": 3,
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    interval = result.result[
+        "result"
+    ]
+
+    assert interval[
+        "interval_type"
+    ] == (
+        "symmetric_finite_sample_conformal"
+    )
+
+    assert (
+        interval[
+            "look_ahead_leakage"
+        ]
+        is False
+    )
