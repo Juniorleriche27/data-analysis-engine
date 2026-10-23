@@ -1176,3 +1176,41 @@ def test_router_discovers_simple_exponential_smoothing():
         "simple_exponential_smoothing_forecast"
         in candidates
     )
+
+
+def test_router_discovers_simple_exponential_smoothing():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=6,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    12,
+                    11,
+                    14,
+                    13,
+                    16,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item in report.candidates
+    }
+
+    assert (
+        "simple_exponential_smoothing_forecast"
+        in candidates
+    )

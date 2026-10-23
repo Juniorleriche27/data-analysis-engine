@@ -1323,3 +1323,57 @@ def test_pipeline_executes_simple_exponential_smoothing():
             31.25,
         ]
     )
+
+
+def test_pipeline_executes_simple_exponential_smoothing():
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=4,
+                freq="D",
+            ),
+            "value": [
+                10,
+                20,
+                30,
+                40,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "simple_exponential_smoothing_forecast",
+        ],
+        parameters_by_method={
+            "simple_exponential_smoothing_forecast": {
+                "alpha": 0.5,
+                "horizon": 2,
+            }
+        },
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    forecast = result.result[
+        "result"
+    ]
+
+    assert forecast[
+        "final_level"
+    ] == pytest.approx(
+        31.25
+    )
+
+    assert forecast[
+        "forecast_values"
+    ] == pytest.approx(
+        [
+            31.25,
+            31.25,
+        ]
+    )
