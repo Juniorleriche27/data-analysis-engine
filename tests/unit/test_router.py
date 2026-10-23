@@ -1682,3 +1682,47 @@ def test_router_discovers_conformal_interval_calibration():
         "conformal_interval_calibration"
         in candidates
     )
+
+
+def test_router_discovers_forecast_model_selection():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=12,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    12,
+                    14,
+                    16,
+                    18,
+                    20,
+                    22,
+                    24,
+                    26,
+                    28,
+                    30,
+                    32,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item in report.candidates
+    }
+
+    assert (
+        "forecast_model_selection"
+        in candidates
+    )

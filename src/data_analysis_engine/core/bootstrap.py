@@ -71,6 +71,9 @@ from data_analysis_engine.engines.timeseries.conformal_intervals import (
 from data_analysis_engine.engines.timeseries.conformal_calibration import (
     ConformalIntervalCalibration,
 )
+from data_analysis_engine.engines.timeseries.model_selection import (
+    ForecastModelSelection,
+)
 from data_analysis_engine.engines.timeseries.interval_calibration import (
     ForecastIntervalCalibration,
 )
@@ -163,6 +166,7 @@ BUILTIN_METHODS = (
     ForecastIntervalCalibration,
     ConformalForecastInterval,
     ConformalIntervalCalibration,
+    ForecastModelSelection,
 )
 
 

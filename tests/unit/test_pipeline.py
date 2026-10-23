@@ -2039,3 +2039,83 @@ def test_pipeline_executes_conformal_interval_calibration():
         ]
         is False
     )
+
+
+def test_pipeline_executes_forecast_model_selection():
+    values = [
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+        30,
+        32,
+    ]
+
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=len(values),
+                freq="D",
+            ),
+            "value": values,
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "forecast_model_selection",
+        ],
+        parameters_by_method={
+            "forecast_model_selection": {
+                "models": [
+                    "naive",
+                    "drift",
+                    "simple_exponential_smoothing",
+                ],
+                "parameters_by_model": {
+                    "simple_exponential_smoothing": {
+                        "alpha": 0.5,
+                    }
+                },
+                "initial_train_size": 5,
+                "horizon": 1,
+                "metric": "mae",
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    selection = result.result[
+        "result"
+    ]
+
+    assert selection[
+        "best_model"
+    ] == "drift"
+
+    assert selection[
+        "best_score"
+    ] == pytest.approx(
+        0.0,
+        abs=1e-12,
+    )
+
+    assert (
+        selection[
+            "look_ahead_leakage"
+        ]
+        is False
+    )
