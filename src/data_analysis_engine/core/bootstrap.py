@@ -62,6 +62,9 @@ from data_analysis_engine.engines.timeseries.exponential_smoothing import (
 from data_analysis_engine.engines.timeseries.forecast_evaluation import (
     RollingOriginForecastBacktest,
 )
+from data_analysis_engine.engines.timeseries.forecast_intervals import (
+    EmpiricalForecastInterval,
+)
 from data_analysis_engine.engines.timeseries.forecasting import (
     DriftForecast,
     NaiveForecast,
@@ -147,6 +150,7 @@ BUILTIN_METHODS = (
     HoltParameterSelection,
     HoltWintersAdditiveForecast,
     HoltWintersAdditiveParameterSelection,
+    EmpiricalForecastInterval,
 )
 
 

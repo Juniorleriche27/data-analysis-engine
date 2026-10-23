@@ -1424,3 +1424,129 @@ def test_router_discovers_holt_winters_parameter_selection():
         "holt_winters_additive_parameter_selection"
         in candidates
     )
+
+
+def test_router_discovers_empirical_forecast_interval():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=10,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    12,
+                    14,
+                    16,
+                    18,
+                    20,
+                    22,
+                    24,
+                    26,
+                    28,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item in report.candidates
+    }
+
+    assert (
+        "empirical_forecast_interval"
+        in candidates
+    )
+
+
+def test_router_discovers_empirical_forecast_interval():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=10,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    12,
+                    14,
+                    16,
+                    18,
+                    20,
+                    22,
+                    24,
+                    26,
+                    28,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item in report.candidates
+    }
+
+    assert (
+        "empirical_forecast_interval"
+        in candidates
+    )
+
+
+def test_router_discovers_empirical_forecast_interval():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=10,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    12,
+                    14,
+                    16,
+                    18,
+                    20,
+                    22,
+                    24,
+                    26,
+                    28,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item in report.candidates
+    }
+
+    assert (
+        "empirical_forecast_interval"
+        in candidates
+    )

@@ -1754,3 +1754,77 @@ def test_pipeline_executes_holt_winters_parameter_selection():
         ]
         is False
     )
+
+
+def test_pipeline_executes_empirical_forecast_interval():
+    values = [
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+    ]
+
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=len(values),
+                freq="D",
+            ),
+            "value": values,
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "empirical_forecast_interval",
+        ],
+        parameters_by_method={
+            "empirical_forecast_interval": {
+                "model": "drift",
+                "initial_train_size": 5,
+                "horizon": 2,
+                "coverage": 0.8,
+                "minimum_interval_observations": 3,
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    interval = result.result[
+        "result"
+    ]
+
+    assert interval[
+        "forecast_values"
+    ] == pytest.approx(
+        [
+            30.0,
+            32.0,
+        ]
+    )
+
+    assert len(
+        interval[
+            "intervals"
+        ]
+    ) == 2
+
+    assert (
+        interval[
+            "look_ahead_leakage"
+        ]
+        is False
+    )
