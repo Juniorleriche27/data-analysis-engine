@@ -70,6 +70,9 @@ from data_analysis_engine.engines.timeseries.forecasting import (
 from data_analysis_engine.engines.timeseries.holt import (
     HoltLinearTrendForecast,
 )
+from data_analysis_engine.engines.timeseries.holt_selection import (
+    HoltParameterSelection,
+)
 from data_analysis_engine.engines.timeseries.smoothing_selection import (
     SimpleExponentialSmoothingAlphaSelection,
 )
@@ -135,6 +138,7 @@ BUILTIN_METHODS = (
     SimpleExponentialSmoothingForecast,
     SimpleExponentialSmoothingAlphaSelection,
     HoltLinearTrendForecast,
+    HoltParameterSelection,
 )
 
 

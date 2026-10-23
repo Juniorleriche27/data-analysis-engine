@@ -1294,3 +1294,45 @@ def test_router_discovers_holt_linear_trend_forecast():
         "holt_linear_trend_forecast"
         in candidates
     )
+
+
+def test_router_discovers_holt_parameter_selection():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=10,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    12,
+                    14,
+                    17,
+                    19,
+                    22,
+                    25,
+                    27,
+                    30,
+                    33,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item in report.candidates
+    }
+
+    assert (
+        "holt_parameter_selection"
+        in candidates
+    )

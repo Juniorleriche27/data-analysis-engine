@@ -47,6 +47,9 @@ from data_analysis_engine.engines.timeseries.forecasting import (
 from data_analysis_engine.engines.timeseries.holt import (
     HoltLinearTrendForecast,
 )
+from data_analysis_engine.engines.timeseries.holt_selection import (
+    HoltParameterSelection,
+)
 from data_analysis_engine.engines.timeseries.smoothing_selection import (
     SimpleExponentialSmoothingAlphaSelection,
 )
@@ -100,4 +103,5 @@ __all__ = [
     "SimpleExponentialSmoothingForecast",
     "SimpleExponentialSmoothingAlphaSelection",
     "HoltLinearTrendForecast",
+    "HoltParameterSelection",
 ]

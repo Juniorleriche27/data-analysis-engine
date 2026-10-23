@@ -1499,3 +1499,87 @@ def test_pipeline_executes_holt_linear_trend_forecast():
             20.0,
         ]
     )
+
+
+def test_pipeline_executes_holt_parameter_selection():
+    values = [
+        100,
+        103,
+        105,
+        108,
+        112,
+        114,
+        118,
+        121,
+        125,
+        128,
+        132,
+        135,
+        139,
+        142,
+    ]
+
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=len(values),
+                freq="D",
+            ),
+            "value": values,
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "holt_parameter_selection",
+        ],
+        parameters_by_method={
+            "holt_parameter_selection": {
+                "alphas": [
+                    0.2,
+                    0.5,
+                    0.8,
+                ],
+                "betas": [
+                    0.2,
+                    0.5,
+                    1.0,
+                ],
+                "initial_train_size": 7,
+                "metric": "mae",
+            }
+        },
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    selection = result.result[
+        "result"
+    ]
+
+    assert selection[
+        "best_alpha"
+    ] == pytest.approx(
+        0.5
+    )
+
+    assert selection[
+        "best_beta"
+    ] == pytest.approx(
+        1.0
+    )
+
+    assert selection[
+        "parameter_combinations_evaluated"
+    ] == 9
+
+    assert (
+        selection[
+            "look_ahead_leakage"
+        ]
+        is False
+    )
