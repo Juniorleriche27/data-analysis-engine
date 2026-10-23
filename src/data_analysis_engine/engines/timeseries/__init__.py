@@ -69,6 +69,9 @@ from data_analysis_engine.engines.timeseries.ensemble_backtest import (
 from data_analysis_engine.engines.timeseries.strategy_selection import (
     ForecastStrategySelection,
 )
+from data_analysis_engine.engines.timeseries.automatic_strategy_forecast import (
+    AutomaticStrategyForecast,
+)
 from data_analysis_engine.engines.timeseries.interval_calibration import (
     ForecastIntervalCalibration,
 )
@@ -156,4 +159,5 @@ __all__ = [
     "WeightedForecastEnsemble",
     "AdaptiveForecastEnsembleBacktest",
     "ForecastStrategySelection",
+    "AutomaticStrategyForecast",
 ]

@@ -2002,3 +2002,50 @@ def test_router_discovers_forecast_strategy_selection():
         "forecast_strategy_selection"
         in candidates
     )
+
+
+def test_router_discovers_automatic_strategy_forecast():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=14,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    12,
+                    14,
+                    16,
+                    18,
+                    20,
+                    22,
+                    24,
+                    26,
+                    28,
+                    30,
+                    32,
+                    34,
+                    36,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item
+        in report.candidates
+    }
+
+    assert (
+        "automatic_strategy_forecast"
+        in candidates
+    )

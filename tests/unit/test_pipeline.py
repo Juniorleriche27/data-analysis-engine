@@ -2563,3 +2563,79 @@ def test_pipeline_executes_forecast_strategy_selection():
         0.0,
         abs=1e-12,
     )
+
+
+def test_pipeline_executes_automatic_strategy_forecast():
+    values = [
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+        30,
+        32,
+        34,
+        36,
+    ]
+
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=len(values),
+                freq="D",
+            ),
+            "value": values,
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "automatic_strategy_forecast",
+        ],
+        parameters_by_method={
+            "automatic_strategy_forecast": {
+                "models": [
+                    "naive",
+                    "drift",
+                ],
+                "initial_train_size": 5,
+                "horizon": 2,
+                "metric": "mae",
+                "minimum_weight_observations": 3,
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    forecast = result.result[
+        "result"
+    ]
+
+    assert forecast[
+        "selected_strategy"
+    ] == "single_model"
+
+    assert forecast[
+        "selected_model"
+    ] == "drift"
+
+    assert forecast[
+        "forecast_values"
+    ] == pytest.approx(
+        [
+            38.0,
+            40.0,
+        ]
+    )
