@@ -2714,3 +2714,78 @@ def test_pipeline_executes_automatic_strategy_forecast_with_intervals():
             "intervals"
         ]
     ) == 2
+
+
+def test_pipeline_executes_automatic_strategy_forecast_reliability():
+    values = [
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+        30,
+        32,
+        34,
+        36,
+    ]
+
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=len(values),
+                freq="D",
+            ),
+            "value": values,
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "automatic_strategy_forecast_reliability",
+        ],
+        parameters_by_method={
+            "automatic_strategy_forecast_reliability": {
+                "models": [
+                    "naive",
+                    "drift",
+                ],
+                "initial_train_size": 5,
+                "horizon": 1,
+                "coverage": 0.9,
+                "calibration_tolerance": 0.1,
+                "minimum_weight_observations": 3,
+                "minimum_calibration_observations": 3,
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    reliability = result.result[
+        "result"
+    ]
+
+    assert reliability[
+        "selected_model"
+    ] == "drift"
+
+    assert reliability[
+        "empirical_coverage"
+    ] == pytest.approx(
+        1.0
+    )
+
+    assert reliability[
+        "calibration_status"
+    ] == "well_calibrated"

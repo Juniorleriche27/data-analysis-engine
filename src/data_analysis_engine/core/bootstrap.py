@@ -98,6 +98,9 @@ from data_analysis_engine.engines.timeseries.automatic_strategy_forecast import 
 from data_analysis_engine.engines.timeseries.automatic_strategy_intervals import (
     AutomaticStrategyForecastWithIntervals,
 )
+from data_analysis_engine.engines.timeseries.automatic_strategy_reliability import (
+    AutomaticStrategyForecastReliability,
+)
 from data_analysis_engine.engines.timeseries.interval_calibration import (
     ForecastIntervalCalibration,
 )
@@ -199,6 +202,7 @@ BUILTIN_METHODS = (
     ForecastStrategySelection,
     AutomaticStrategyForecast,
     AutomaticStrategyForecastWithIntervals,
+    AutomaticStrategyForecastReliability,
 )
 
 
