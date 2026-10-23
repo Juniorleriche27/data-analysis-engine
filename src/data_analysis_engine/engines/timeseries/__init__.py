@@ -33,6 +33,9 @@ from data_analysis_engine.engines.timeseries.differencing import (
 from data_analysis_engine.engines.timeseries.dtw import (
     DynamicTimeWarping,
 )
+from data_analysis_engine.engines.timeseries.exponential_smoothing import (
+    SimpleExponentialSmoothingForecast,
+)
 from data_analysis_engine.engines.timeseries.forecast_evaluation import (
     RollingOriginForecastBacktest,
 )
@@ -88,4 +91,5 @@ __all__ = [
     "RollingOriginForecastBacktest",
     "AutoregressiveForecast",
     "AutoregressiveOrderSelection",
+    "SimpleExponentialSmoothingForecast",
 ]

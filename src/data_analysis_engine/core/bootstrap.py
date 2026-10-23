@@ -7,7 +7,6 @@ from data_analysis_engine.engines.multivariate.covariance import (
 from data_analysis_engine.engines.multivariate.pca import (
     PrincipalComponentAnalysis,
 )
-
 from data_analysis_engine.engines.similarity.numeric import (
     CosineDistance,
     CosineSimilarity,
@@ -15,7 +14,6 @@ from data_analysis_engine.engines.similarity.numeric import (
     ManhattanDistance,
     MinkowskiDistance,
 )
-
 from data_analysis_engine.engines.statistics.correlation import (
     PearsonCorrelation,
     SpearmanCorrelation,
@@ -23,7 +21,6 @@ from data_analysis_engine.engines.statistics.correlation import (
 from data_analysis_engine.engines.statistics.descriptive import (
     DescriptiveStatistics,
 )
-
 from data_analysis_engine.engines.timeseries.anomalies import (
     RollingMADAnomaly,
     RollingZScoreAnomaly,
@@ -58,6 +55,9 @@ from data_analysis_engine.engines.timeseries.differencing import (
 )
 from data_analysis_engine.engines.timeseries.dtw import (
     DynamicTimeWarping,
+)
+from data_analysis_engine.engines.timeseries.exponential_smoothing import (
+    SimpleExponentialSmoothingForecast,
 )
 from data_analysis_engine.engines.timeseries.forecast_evaluation import (
     RollingOriginForecastBacktest,
@@ -126,6 +126,7 @@ BUILTIN_METHODS = (
     RollingOriginForecastBacktest,
     AutoregressiveForecast,
     AutoregressiveOrderSelection,
+    SimpleExponentialSmoothingForecast,
 )
 
 

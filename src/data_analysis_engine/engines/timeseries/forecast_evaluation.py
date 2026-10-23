@@ -12,6 +12,10 @@ from data_analysis_engine.engines.timeseries.autoregression import (
     _recursive_ar_forecast,
     _validate_order,
 )
+from data_analysis_engine.engines.timeseries.exponential_smoothing import (
+    _simple_exponential_smoothing_forecast,
+    _validate_alpha,
+)
 from data_analysis_engine.engines.timeseries.forecasting import (
     _prepare_regular_series,
     _recursive_seasonal_naive_forecast,
@@ -30,6 +34,7 @@ SUPPORTED_MODELS = (
     "drift",
     "seasonal_naive",
     "autoregressive",
+    "simple_exponential_smoothing",
 )
 
 
@@ -60,6 +65,7 @@ def _forecast_from_history(
     horizon: int,
     p: int | None = None,
     season_length: int | None = None,
+    alpha: float | None = None,
 ) -> np.ndarray:
     if model == "naive":
         return np.full(
@@ -135,6 +141,24 @@ def _forecast_from_history(
             horizon=horizon,
         )
 
+    if (
+        model
+        == "simple_exponential_smoothing"
+    ):
+        if alpha is None:
+            raise InvalidAnalysisInputError(
+                "Simple exponential smoothing "
+                "requires 'alpha'."
+            )
+
+        return (
+            _simple_exponential_smoothing_forecast(
+                history,
+                alpha=alpha,
+                horizon=horizon,
+            )
+        )
+
     raise InvalidAnalysisInputError(
         "Unsupported forecast model: "
         f"'{model}'."
@@ -145,10 +169,7 @@ def _forecast_metrics(
     actual: np.ndarray,
     forecast: np.ndarray,
 ) -> dict[str, Any]:
-    errors = (
-        actual
-        - forecast
-    )
+    errors = actual - forecast
 
     absolute_errors = np.abs(
         errors
@@ -266,13 +287,16 @@ def _forecast_metrics(
 class RollingOriginForecastBacktest(
     AnalysisMethod
 ):
-    name = "rolling_origin_forecast_backtest"
+    name = (
+        "rolling_origin_forecast_backtest"
+    )
     category = "timeseries"
-    version = "1.2"
+    version = "1.3"
 
     description = (
-        "Evaluate naive, drift, seasonal-naive, or "
-        "autoregressive forecasting using expanding-window "
+        "Evaluate naive, drift, seasonal-naive, "
+        "autoregressive, or simple exponential "
+        "smoothing forecasting using expanding-window "
         "rolling-origin backtesting without look-ahead leakage."
     )
 
@@ -336,6 +360,7 @@ class RollingOriginForecastBacktest(
 
         p: int | None = None
         season_length: int | None = None
+        alpha: float | None = None
 
         model_parameters: dict[
             str,
@@ -367,6 +392,21 @@ class RollingOriginForecastBacktest(
             model_parameters[
                 "season_length"
             ] = season_length
+
+        if (
+            model
+            == "simple_exponential_smoothing"
+        ):
+            alpha = _validate_alpha(
+                kwargs.get(
+                    "alpha",
+                    0.2,
+                )
+            )
+
+            model_parameters[
+                "alpha"
+            ] = alpha
 
         initial_train_size = kwargs.get(
             "initial_train_size"
@@ -473,6 +513,7 @@ class RollingOriginForecastBacktest(
                     horizon=horizon,
                     p=p,
                     season_length=season_length,
+                    alpha=alpha,
                 )
             )
 
@@ -518,9 +559,7 @@ class RollingOriginForecastBacktest(
                         "training_end_index": (
                             train_end - 1
                         ),
-                        "training_size": (
-                            train_end
-                        ),
+                        "training_size": train_end,
                         "origin_timestamp": (
                             time[
                                 train_end - 1
@@ -537,9 +576,7 @@ class RollingOriginForecastBacktest(
                                 target_index
                             ].isoformat()
                         ),
-                        "actual": (
-                            actual_value
-                        ),
+                        "actual": actual_value,
                         "forecast": (
                             forecast_value
                         ),
