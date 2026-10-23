@@ -1078,3 +1078,66 @@ def test_pipeline_executes_autoregressive_forecast():
             "forecast_values"
         ]
     ) == 2
+
+
+def test_pipeline_executes_autoregressive_backtest():
+    values = [
+        10.0
+    ]
+
+    for _ in range(11):
+        values.append(
+            2.0
+            + 0.5
+            * values[-1]
+        )
+
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=len(values),
+                freq="D",
+            ),
+            "value": values,
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "rolling_origin_forecast_backtest",
+        ],
+        parameters_by_method={
+            "rolling_origin_forecast_backtest": {
+                "model": "autoregressive",
+                "p": 1,
+                "initial_train_size": 5,
+                "horizon": 1,
+            }
+        },
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    backtest = result.result[
+        "result"
+    ]
+
+    assert (
+        backtest["model"]
+        == "autoregressive"
+    )
+
+    assert backtest[
+        "model_parameters"
+    ]["p"] == 1
+
+    assert backtest[
+        "metrics"
+    ]["mae"] == pytest.approx(
+        0.0,
+        abs=1e-12,
+    )

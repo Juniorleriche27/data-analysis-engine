@@ -7,6 +7,11 @@ from data_analysis_engine.core.contracts import AnalysisMethod
 from data_analysis_engine.core.exceptions import (
     InvalidAnalysisInputError,
 )
+from data_analysis_engine.engines.timeseries.autoregression import (
+    _fit_autoregression,
+    _recursive_ar_forecast,
+    _validate_order,
+)
 from data_analysis_engine.engines.timeseries.forecasting import (
     _prepare_regular_series,
 )
@@ -15,6 +20,12 @@ from data_analysis_engine.engines.timeseries.forecasting import (
 SUPPORTED_BASELINES = (
     "naive",
     "drift",
+)
+
+SUPPORTED_MODELS = (
+    "naive",
+    "drift",
+    "autoregressive",
 )
 
 
@@ -43,6 +54,7 @@ def _forecast_from_history(
     *,
     model: str,
     horizon: int,
+    p: int | None = None,
 ) -> np.ndarray:
     if model == "naive":
         return np.full(
@@ -81,6 +93,28 @@ def _forecast_from_history(
                 )
             ],
             dtype=float,
+        )
+
+    if model == "autoregressive":
+        if p is None:
+            raise InvalidAnalysisInputError(
+                "Autoregressive forecasting requires 'p'."
+            )
+
+        fit = _fit_autoregression(
+            history,
+            p,
+        )
+
+        return _recursive_ar_forecast(
+            history,
+            intercept=fit[
+                "intercept"
+            ],
+            lag_coefficients=fit[
+                "lag_coefficients"
+            ],
+            horizon=horizon,
         )
 
     raise InvalidAnalysisInputError(
@@ -216,11 +250,11 @@ class RollingOriginForecastBacktest(
 ):
     name = "rolling_origin_forecast_backtest"
     category = "timeseries"
-    version = "1.0"
+    version = "1.1"
 
     description = (
-        "Evaluate naive or drift forecasting using "
-        "expanding-window rolling-origin backtesting "
+        "Evaluate naive, drift, or autoregressive forecasting "
+        "using expanding-window rolling-origin backtesting "
         "without look-ahead leakage."
     )
 
@@ -257,11 +291,11 @@ class RollingOriginForecastBacktest(
             "naive",
         )
 
-        if model not in SUPPORTED_BASELINES:
+        if model not in SUPPORTED_MODELS:
             raise InvalidAnalysisInputError(
                 "'model' must be one of: "
                 + ", ".join(
-                    SUPPORTED_BASELINES
+                    SUPPORTED_MODELS
                 )
                 + "."
             )
@@ -282,15 +316,44 @@ class RollingOriginForecastBacktest(
             "stride",
         )
 
+        p: int | None = None
+
+        model_parameters: dict[
+            str,
+            Any,
+        ] = {}
+
+        if model == "autoregressive":
+            p = _validate_order(
+                kwargs.get(
+                    "p",
+                    1,
+                )
+            )
+
+            model_parameters[
+                "p"
+            ] = p
+
         initial_train_size = kwargs.get(
             "initial_train_size"
         )
 
         if initial_train_size is None:
-            initial_train_size = max(
-                2,
-                len(values) // 2,
-            )
+            if model == "autoregressive":
+                minimum_ar_training = (
+                    2 * p + 1
+                )
+
+                initial_train_size = max(
+                    minimum_ar_training,
+                    len(values) // 2,
+                )
+            else:
+                initial_train_size = max(
+                    2,
+                    len(values) // 2,
+                )
 
         initial_train_size = (
             _validate_positive_integer(
@@ -303,6 +366,21 @@ class RollingOriginForecastBacktest(
             raise InvalidAnalysisInputError(
                 "'initial_train_size' must be at least 2."
             )
+
+        if model == "autoregressive":
+            minimum_ar_training = (
+                2 * p + 1
+            )
+
+            if (
+                initial_train_size
+                < minimum_ar_training
+            ):
+                raise InvalidAnalysisInputError(
+                    "AR(p) rolling-origin backtesting requires "
+                    "'initial_train_size' to be at least "
+                    f"{minimum_ar_training} for AR({p})."
+                )
 
         if (
             initial_train_size
@@ -346,6 +424,7 @@ class RollingOriginForecastBacktest(
                     history,
                     model=model,
                     horizon=horizon,
+                    p=p,
                 )
             )
 
@@ -471,6 +550,9 @@ class RollingOriginForecastBacktest(
             ),
             "look_ahead_leakage": False,
             "model": model,
+            "model_parameters": (
+                model_parameters
+            ),
             "sample_size": len(values),
             "initial_train_size": (
                 initial_train_size
