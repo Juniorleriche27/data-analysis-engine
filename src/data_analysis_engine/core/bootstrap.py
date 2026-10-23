@@ -28,6 +28,9 @@ from data_analysis_engine.engines.timeseries.anomalies import (
     RollingMADAnomaly,
     RollingZScoreAnomaly,
 )
+from data_analysis_engine.engines.timeseries.ar_selection import (
+    AutoregressiveOrderSelection,
+)
 from data_analysis_engine.engines.timeseries.autoregression import (
     AutoregressiveForecast,
 )
@@ -120,6 +123,7 @@ BUILTIN_METHODS = (
     DriftForecast,
     RollingOriginForecastBacktest,
     AutoregressiveForecast,
+    AutoregressiveOrderSelection,
 )
 
 

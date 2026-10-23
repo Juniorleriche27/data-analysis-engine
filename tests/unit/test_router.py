@@ -1056,3 +1056,45 @@ def test_router_discovers_autoregressive_forecast():
         "autoregressive_forecast"
         in candidates
     )
+
+
+def test_router_discovers_autoregressive_order_selection():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=10,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    11,
+                    12,
+                    14,
+                    15,
+                    17,
+                    18,
+                    20,
+                    21,
+                    23,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item in report.candidates
+    }
+
+    assert (
+        "autoregressive_order_selection"
+        in candidates
+    )
