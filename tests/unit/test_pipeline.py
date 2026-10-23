@@ -2195,3 +2195,79 @@ def test_pipeline_executes_automatic_forecast():
         ]
         is False
     )
+
+
+def test_pipeline_executes_automatic_forecast_with_intervals():
+    values = [
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+        30,
+        32,
+    ]
+
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=len(values),
+                freq="D",
+            ),
+            "value": values,
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "automatic_forecast_with_intervals",
+        ],
+        parameters_by_method={
+            "automatic_forecast_with_intervals": {
+                "models": [
+                    "naive",
+                    "drift",
+                ],
+                "initial_train_size": 5,
+                "horizon": 2,
+                "coverage": 0.8,
+                "minimum_calibration_observations": 3,
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    forecast = result.result[
+        "result"
+    ]
+
+    assert forecast[
+        "selected_model"
+    ] == "drift"
+
+    assert forecast[
+        "forecast_values"
+    ] == pytest.approx(
+        [
+            34.0,
+            36.0,
+        ]
+    )
+
+    assert len(
+        forecast[
+            "intervals"
+        ]
+    ) == 2
