@@ -30,6 +30,7 @@ class AnalysisMethod(ABC):
     ] = ()
 
     allow_constant_columns: bool = False
+    preserve_missing_values: bool = False
 
     @abstractmethod
     def execute(self, **kwargs: Any) -> dict[str, Any]:
@@ -49,4 +50,5 @@ class AnalysisMethod(ABC):
                 self.role_requirements
             ),
             "allow_constant_columns": self.allow_constant_columns,
+            "preserve_missing_values": self.preserve_missing_values,
         }

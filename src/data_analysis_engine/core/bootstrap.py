@@ -101,6 +101,9 @@ from data_analysis_engine.engines.timeseries.automatic_strategy_intervals import
 from data_analysis_engine.engines.timeseries.automatic_strategy_reliability import (
     AutomaticStrategyForecastReliability,
 )
+from data_analysis_engine.engines.validation.missingness import (
+    MissingValueDiagnostic,
+)
 from data_analysis_engine.engines.timeseries.interval_calibration import (
     ForecastIntervalCalibration,
 )
@@ -203,6 +206,7 @@ BUILTIN_METHODS = (
     AutomaticStrategyForecast,
     AutomaticStrategyForecastWithIntervals,
     AutomaticStrategyForecastReliability,
+    MissingValueDiagnostic,
 )
 
 

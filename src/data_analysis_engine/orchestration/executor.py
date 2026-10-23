@@ -145,7 +145,17 @@ class AnalysisExecutor:
         original_rows = len(selected)
 
         if task.selection_mode == "per_column":
-            cleaned = selected.dropna()
+            preserve_missing_values = (
+                self._method_preserves_missing_values(
+                    task.method
+                )
+            )
+
+            cleaned = (
+                selected
+                if preserve_missing_values
+                else selected.dropna()
+            )
 
             values = self._series_to_python_list(
                 cleaned.iloc[:, 0]
@@ -265,6 +275,21 @@ class AnalysisExecutor:
             "Unsupported task selection mode: "
             f"'{task.selection_mode}'."
         )
+
+    def _method_preserves_missing_values(
+        self,
+        method_name: str,
+    ) -> bool:
+        for metadata in self.engine.available_methods():
+            if metadata["name"] == method_name:
+                return bool(
+                    metadata.get(
+                        "preserve_missing_values",
+                        False,
+                    )
+                )
+
+        return False
 
     def _validate_additional_parameters(
         self,

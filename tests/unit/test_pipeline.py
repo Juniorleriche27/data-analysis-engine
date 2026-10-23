@@ -2789,3 +2789,48 @@ def test_pipeline_executes_automatic_strategy_forecast_reliability():
     assert reliability[
         "calibration_status"
     ] == "well_calibrated"
+
+
+def test_pipeline_executes_missing_value_diagnostic():
+    dataframe = pd.DataFrame(
+        {
+            "value": [
+                10.0,
+                None,
+                30.0,
+                None,
+                50.0,
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "missing_value_diagnostic",
+        ],
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert diagnostic[
+        "missing_count"
+    ] == 2
+
+    assert diagnostic[
+        "missing_rate"
+    ] == pytest.approx(
+        0.4
+    )
+
+    assert diagnostic[
+        "severity"
+    ] == "high"

@@ -2143,3 +2143,43 @@ def test_router_discovers_automatic_strategy_forecast_reliability():
         "automatic_strategy_forecast_reliability"
         in candidates
     )
+
+
+def test_router_discovers_missing_value_diagnostic():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "value": [
+                    10.0,
+                    None,
+                    30.0,
+                    40.0,
+                    None,
+                ],
+                "category": [
+                    "A",
+                    "B",
+                    None,
+                    "A",
+                    "B",
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item
+        in report.candidates
+    }
+
+    assert (
+        "missing_value_diagnostic"
+        in candidates
+    )
