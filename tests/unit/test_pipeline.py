@@ -1377,3 +1377,76 @@ def test_pipeline_executes_simple_exponential_smoothing():
             31.25,
         ]
     )
+
+
+def test_pipeline_executes_ses_alpha_selection():
+    values = [
+        100,
+        104,
+        102,
+        106,
+        105,
+        109,
+        108,
+        112,
+        111,
+        115,
+        114,
+        118,
+        117,
+        121,
+    ]
+
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=len(values),
+                freq="D",
+            ),
+            "value": values,
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "simple_exponential_smoothing_alpha_selection",
+        ],
+        parameters_by_method={
+            "simple_exponential_smoothing_alpha_selection": {
+                "alphas": [
+                    0.2,
+                    0.5,
+                    0.8,
+                ],
+                "initial_train_size": 7,
+                "metric": "mae",
+            }
+        },
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    selection = result.result[
+        "result"
+    ]
+
+    assert selection[
+        "best_alpha"
+    ] == pytest.approx(
+        0.8
+    )
+
+    assert selection[
+        "alphas_evaluated"
+    ] == 3
+
+    assert (
+        selection[
+            "look_ahead_leakage"
+        ]
+        is False
+    )

@@ -67,6 +67,9 @@ from data_analysis_engine.engines.timeseries.forecasting import (
     NaiveForecast,
     SeasonalNaiveForecast,
 )
+from data_analysis_engine.engines.timeseries.smoothing_selection import (
+    SimpleExponentialSmoothingAlphaSelection,
+)
 from data_analysis_engine.engines.timeseries.stability import (
     TimeSeriesStabilityDiagnostic,
 )
@@ -127,6 +130,7 @@ BUILTIN_METHODS = (
     AutoregressiveForecast,
     AutoregressiveOrderSelection,
     SimpleExponentialSmoothingForecast,
+    SimpleExponentialSmoothingAlphaSelection,
 )
 
 
