@@ -72,6 +72,9 @@ from data_analysis_engine.engines.timeseries.strategy_selection import (
 from data_analysis_engine.engines.timeseries.automatic_strategy_forecast import (
     AutomaticStrategyForecast,
 )
+from data_analysis_engine.engines.timeseries.automatic_strategy_intervals import (
+    AutomaticStrategyForecastWithIntervals,
+)
 from data_analysis_engine.engines.timeseries.interval_calibration import (
     ForecastIntervalCalibration,
 )
@@ -160,4 +163,5 @@ __all__ = [
     "AdaptiveForecastEnsembleBacktest",
     "ForecastStrategySelection",
     "AutomaticStrategyForecast",
+    "AutomaticStrategyForecastWithIntervals",
 ]
