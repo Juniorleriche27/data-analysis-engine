@@ -1214,3 +1214,58 @@ def test_pipeline_executes_autoregressive_order_selection():
         ]
         is False
     )
+
+
+def test_pipeline_executes_seasonal_naive_forecast():
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=6,
+                freq="D",
+            ),
+            "value": [
+                10,
+                20,
+                30,
+                10,
+                20,
+                30,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "seasonal_naive_forecast",
+        ],
+        parameters_by_method={
+            "seasonal_naive_forecast": {
+                "season_length": 3,
+                "horizon": 3,
+            }
+        },
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    forecast = result.result[
+        "result"
+    ]
+
+    assert forecast[
+        "model"
+    ] == "seasonal_naive"
+
+    assert forecast[
+        "forecast_values"
+    ] == pytest.approx(
+        [
+            10,
+            20,
+            30,
+        ]
+    )

@@ -65,6 +65,7 @@ from data_analysis_engine.engines.timeseries.forecast_evaluation import (
 from data_analysis_engine.engines.timeseries.forecasting import (
     DriftForecast,
     NaiveForecast,
+    SeasonalNaiveForecast,
 )
 from data_analysis_engine.engines.timeseries.stability import (
     TimeSeriesStabilityDiagnostic,
@@ -121,6 +122,7 @@ BUILTIN_METHODS = (
     TemporalStructureDiagnostic,
     NaiveForecast,
     DriftForecast,
+    SeasonalNaiveForecast,
     RollingOriginForecastBacktest,
     AutoregressiveForecast,
     AutoregressiveOrderSelection,

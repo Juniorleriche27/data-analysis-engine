@@ -14,17 +14,21 @@ from data_analysis_engine.engines.timeseries.autoregression import (
 )
 from data_analysis_engine.engines.timeseries.forecasting import (
     _prepare_regular_series,
+    _recursive_seasonal_naive_forecast,
+    _validate_season_length,
 )
 
 
 SUPPORTED_BASELINES = (
     "naive",
     "drift",
+    "seasonal_naive",
 )
 
 SUPPORTED_MODELS = (
     "naive",
     "drift",
+    "seasonal_naive",
     "autoregressive",
 )
 
@@ -55,6 +59,7 @@ def _forecast_from_history(
     model: str,
     horizon: int,
     p: int | None = None,
+    season_length: int | None = None,
 ) -> np.ndarray:
     if model == "naive":
         return np.full(
@@ -93,6 +98,19 @@ def _forecast_from_history(
                 )
             ],
             dtype=float,
+        )
+
+    if model == "seasonal_naive":
+        if season_length is None:
+            raise InvalidAnalysisInputError(
+                "Seasonal naive forecasting requires "
+                "'season_length'."
+            )
+
+        return _recursive_seasonal_naive_forecast(
+            history,
+            season_length=season_length,
+            horizon=horizon,
         )
 
     if model == "autoregressive":
@@ -250,12 +268,12 @@ class RollingOriginForecastBacktest(
 ):
     name = "rolling_origin_forecast_backtest"
     category = "timeseries"
-    version = "1.1"
+    version = "1.2"
 
     description = (
-        "Evaluate naive, drift, or autoregressive forecasting "
-        "using expanding-window rolling-origin backtesting "
-        "without look-ahead leakage."
+        "Evaluate naive, drift, seasonal-naive, or "
+        "autoregressive forecasting using expanding-window "
+        "rolling-origin backtesting without look-ahead leakage."
     )
 
     supported_roles = (
@@ -317,6 +335,7 @@ class RollingOriginForecastBacktest(
         )
 
         p: int | None = None
+        season_length: int | None = None
 
         model_parameters: dict[
             str,
@@ -335,25 +354,42 @@ class RollingOriginForecastBacktest(
                 "p"
             ] = p
 
+        if model == "seasonal_naive":
+            season_length = (
+                _validate_season_length(
+                    kwargs.get(
+                        "season_length",
+                        7,
+                    )
+                )
+            )
+
+            model_parameters[
+                "season_length"
+            ] = season_length
+
         initial_train_size = kwargs.get(
             "initial_train_size"
         )
 
         if initial_train_size is None:
             if model == "autoregressive":
-                minimum_ar_training = (
+                minimum_training = (
                     2 * p + 1
                 )
 
-                initial_train_size = max(
-                    minimum_ar_training,
-                    len(values) // 2,
+            elif model == "seasonal_naive":
+                minimum_training = (
+                    season_length
                 )
+
             else:
-                initial_train_size = max(
-                    2,
-                    len(values) // 2,
-                )
+                minimum_training = 2
+
+            initial_train_size = max(
+                minimum_training,
+                len(values) // 2,
+            )
 
         initial_train_size = (
             _validate_positive_integer(
@@ -380,6 +416,17 @@ class RollingOriginForecastBacktest(
                     "AR(p) rolling-origin backtesting requires "
                     "'initial_train_size' to be at least "
                     f"{minimum_ar_training} for AR({p})."
+                )
+
+        if model == "seasonal_naive":
+            if (
+                initial_train_size
+                < season_length
+            ):
+                raise InvalidAnalysisInputError(
+                    "Seasonal naive rolling-origin backtesting "
+                    "requires 'initial_train_size' to be at least "
+                    "the seasonal length."
                 )
 
         if (
@@ -425,6 +472,7 @@ class RollingOriginForecastBacktest(
                     model=model,
                     horizon=horizon,
                     p=p,
+                    season_length=season_length,
                 )
             )
 

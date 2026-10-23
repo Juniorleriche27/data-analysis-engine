@@ -31,6 +31,25 @@ def _validate_horizon(
     return value
 
 
+def _validate_season_length(
+    value: Any,
+) -> int:
+    if (
+        not isinstance(value, int)
+        or isinstance(value, bool)
+    ):
+        raise InvalidAnalysisInputError(
+            "'season_length' must be an integer."
+        )
+
+    if value < 2:
+        raise InvalidAnalysisInputError(
+            "'season_length' must be at least 2."
+        )
+
+    return value
+
+
 def _prepare_regular_series(
     time: Any,
     values: Any,
@@ -142,6 +161,48 @@ def _future_timestamps(
         timestamp.isoformat()
         for timestamp in future
     ]
+
+
+def _recursive_seasonal_naive_forecast(
+    values: np.ndarray,
+    *,
+    season_length: int,
+    horizon: int,
+) -> np.ndarray:
+    if len(values) < season_length:
+        raise InvalidAnalysisInputError(
+            "Seasonal naive forecasting requires at least "
+            "one complete observed season."
+        )
+
+    history = [
+        float(value)
+        for value in values
+    ]
+
+    forecasts: list[float] = []
+
+    for _ in range(
+        horizon
+    ):
+        prediction = float(
+            history[
+                -season_length
+            ]
+        )
+
+        forecasts.append(
+            prediction
+        )
+
+        history.append(
+            prediction
+        )
+
+    return np.asarray(
+        forecasts,
+        dtype=float,
+    )
 
 
 class _ForecastMethod(AnalysisMethod):
@@ -307,4 +368,75 @@ class DriftForecast(_ForecastMethod):
                 )
             ),
             "forecast_values": forecasts,
+        }
+
+
+class SeasonalNaiveForecast(
+    _ForecastMethod
+):
+    name = "seasonal_naive_forecast"
+    version = "1.0"
+
+    description = (
+        "Forecast future observations by repeating values "
+        "from the most recent observed seasonal cycle."
+    )
+
+    def execute(
+        self,
+        **kwargs: Any,
+    ) -> dict[str, Any]:
+        horizon = _validate_horizon(
+            kwargs.get(
+                "horizon",
+                1,
+            )
+        )
+
+        season_length = (
+            _validate_season_length(
+                kwargs.get(
+                    "season_length",
+                    7,
+                )
+            )
+        )
+
+        time, values, interval_ns = (
+            _prepare_regular_series(
+                kwargs.get("time"),
+                kwargs.get("values"),
+            )
+        )
+
+        forecasts = (
+            _recursive_seasonal_naive_forecast(
+                values,
+                season_length=season_length,
+                horizon=horizon,
+            )
+        )
+
+        return {
+            "model": "seasonal_naive",
+            "sample_size": len(values),
+            "season_length": (
+                season_length
+            ),
+            "horizon": horizon,
+            "frequency_seconds": (
+                interval_ns
+                / 1_000_000_000.0
+            ),
+            "forecast_timestamps": (
+                _future_timestamps(
+                    time,
+                    interval_ns,
+                    horizon,
+                )
+            ),
+            "forecast_values": [
+                float(value)
+                for value in forecasts
+            ],
         }

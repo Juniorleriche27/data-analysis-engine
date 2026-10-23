@@ -1098,3 +1098,43 @@ def test_router_discovers_autoregressive_order_selection():
         "autoregressive_order_selection"
         in candidates
     )
+
+
+def test_router_discovers_seasonal_naive_forecast():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "date": pd.date_range(
+                    "2026-01-01",
+                    periods=8,
+                    freq="D",
+                ),
+                "value": [
+                    10,
+                    20,
+                    30,
+                    10,
+                    20,
+                    30,
+                    10,
+                    20,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item in report.candidates
+    }
+
+    assert (
+        "seasonal_naive_forecast"
+        in candidates
+    )
