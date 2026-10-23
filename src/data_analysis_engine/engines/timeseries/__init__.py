@@ -50,6 +50,9 @@ from data_analysis_engine.engines.timeseries.holt import (
 from data_analysis_engine.engines.timeseries.holt_winters import (
     HoltWintersAdditiveForecast,
 )
+from data_analysis_engine.engines.timeseries.holt_winters_selection import (
+    HoltWintersAdditiveParameterSelection,
+)
 from data_analysis_engine.engines.timeseries.holt_selection import (
     HoltParameterSelection,
 )
@@ -108,4 +111,5 @@ __all__ = [
     "HoltLinearTrendForecast",
     "HoltParameterSelection",
     "HoltWintersAdditiveForecast",
+    "HoltWintersAdditiveParameterSelection",
 ]

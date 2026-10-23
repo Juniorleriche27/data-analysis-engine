@@ -1650,3 +1650,107 @@ def test_pipeline_executes_holt_winters_additive_forecast():
             128.0,
         ]
     )
+
+
+def test_pipeline_executes_holt_winters_parameter_selection():
+    values = [
+        110,
+        97,
+        109,
+        96,
+        118,
+        105,
+        117,
+        104,
+        127,
+        112,
+        126,
+        111,
+        133,
+        122,
+        134,
+        119,
+        143,
+        128,
+        142,
+        129,
+    ]
+
+    dataframe = pd.DataFrame(
+        {
+            "date": pd.date_range(
+                "2026-01-01",
+                periods=len(values),
+                freq="D",
+            ),
+            "value": values,
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "holt_winters_additive_parameter_selection",
+        ],
+        parameters_by_method={
+            "holt_winters_additive_parameter_selection": {
+                "season_length": 4,
+                "alphas": [
+                    0.5,
+                    1.0,
+                ],
+                "betas": [
+                    0.5,
+                    1.0,
+                ],
+                "gammas": [
+                    0.5,
+                    1.0,
+                ],
+                "initial_train_size": 8,
+                "metric": "mae",
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    selection = result.result[
+        "result"
+    ]
+
+    assert selection[
+        "parameter_combinations_evaluated"
+    ] == 8
+
+    assert selection[
+        "best_alpha"
+    ] in {
+        0.5,
+        1.0,
+    }
+
+    assert selection[
+        "best_beta"
+    ] in {
+        0.5,
+        1.0,
+    }
+
+    assert selection[
+        "best_gamma"
+    ] in {
+        0.5,
+        1.0,
+    }
+
+    assert (
+        selection[
+            "look_ahead_leakage"
+        ]
+        is False
+    )
