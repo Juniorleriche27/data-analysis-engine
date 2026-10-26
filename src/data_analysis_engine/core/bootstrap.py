@@ -266,6 +266,11 @@ from data_analysis_engine.engines.inference.chi_square import (
     ChiSquareIndependenceTest,
 )
 
+
+from data_analysis_engine.engines.regression.ols import (
+    OrdinaryLeastSquares,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -354,6 +359,7 @@ BUILTIN_METHODS = (
     OneSampleProportionZTest,
     TwoSampleProportionZTest,
     ChiSquareIndependenceTest,
+    OrdinaryLeastSquares,
 )
 
 

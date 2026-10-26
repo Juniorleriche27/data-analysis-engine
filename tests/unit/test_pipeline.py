@@ -4146,3 +4146,69 @@ def test_pipeline_executes_chi_square_independence_test():
     assert statistics[
         "cramers_v"
     ] > 0.0
+
+
+def test_pipeline_executes_ordinary_least_squares():
+    dataframe = pd.DataFrame(
+        {
+            "marketing": [
+                1.0,
+                2.0,
+                3.0,
+                4.0,
+                5.0,
+            ],
+            "sales": [
+                5.0,
+                8.0,
+                11.0,
+                14.0,
+                17.0,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "ordinary_least_squares",
+        ],
+        parameters_by_method={
+            "ordinary_least_squares": {
+                "target_column": "sales",
+                "predictor_columns": [
+                    "marketing",
+                ],
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    model = result.result[
+        "result"
+    ]
+
+    assert model[
+        "intercept"
+    ] == pytest.approx(
+        2.0
+    )
+
+    assert model[
+        "coefficients"
+    ][
+        "marketing"
+    ] == pytest.approx(
+        3.0
+    )
+
+    assert model[
+        "r_squared"
+    ] == pytest.approx(
+        1.0
+    )
