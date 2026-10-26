@@ -2995,3 +2995,56 @@ def test_pipeline_executes_non_finite_value_diagnostic():
     ] == 3
 
     assert result.rows_dropped == 0
+
+
+def test_pipeline_executes_constant_column_diagnostic():
+    dataframe = pd.DataFrame(
+        {
+            "status": [
+                "A",
+                "A",
+                "A",
+                "A",
+                "B",
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "constant_column_diagnostic",
+        ],
+        parameters_by_method={
+            "constant_column_diagnostic": {
+                "dominance_threshold": 0.8,
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert diagnostic[
+        "dominant_ratio"
+    ] == pytest.approx(
+        0.8
+    )
+
+    assert (
+        diagnostic[
+            "is_near_constant"
+        ]
+        is True
+    )
+
+    assert diagnostic[
+        "variability_status"
+    ] == "near_constant"

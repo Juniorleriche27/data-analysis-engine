@@ -2335,3 +2335,41 @@ def test_router_discovers_non_finite_value_diagnostic():
         "non_finite_value_diagnostic"
         in candidates
     )
+
+
+def test_router_discovers_constant_column_diagnostic():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "status": [
+                    "active",
+                    "active",
+                    "active",
+                    "active",
+                ],
+                "value": [
+                    10,
+                    20,
+                    30,
+                    40,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        item.method
+        for item
+        in report.candidates
+    }
+
+    assert (
+        "constant_column_diagnostic"
+        in candidates
+    )

@@ -104,6 +104,9 @@ from data_analysis_engine.engines.timeseries.automatic_strategy_reliability impo
 from data_analysis_engine.engines.validation.missingness import (
     MissingValueDiagnostic,
 )
+from data_analysis_engine.engines.validation.constantness import (
+    ConstantColumnDiagnostic,
+)
 from data_analysis_engine.engines.validation.constant_columns import (
     ConstantColumnDiagnostic,
 )
