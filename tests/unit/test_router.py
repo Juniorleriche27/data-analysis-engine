@@ -2695,3 +2695,35 @@ def test_router_discovers_feature_scaling():
         "feature_scaling"
         in candidates
     )
+
+
+def test_router_discovers_numerical_transformation():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                ]
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "numerical_transformation"
+        in candidates
+    )

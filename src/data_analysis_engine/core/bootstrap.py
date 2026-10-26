@@ -203,6 +203,11 @@ from data_analysis_engine.engines.preprocessing.scaling import (
     FeatureScaling,
 )
 
+
+from data_analysis_engine.engines.preprocessing.transformations import (
+    NumericalTransformation,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -276,6 +281,7 @@ BUILTIN_METHODS = (
     DataQualityReport,
     MissingValueImputation,
     FeatureScaling,
+    NumericalTransformation,
 )
 
 

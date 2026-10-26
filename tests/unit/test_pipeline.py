@@ -1,3 +1,4 @@
+import math
 from pathlib import Path
 
 import pandas as pd
@@ -3447,5 +3448,49 @@ def test_pipeline_executes_feature_scaling():
             0.0,
             0.5,
             1.0,
+        ]
+    )
+
+
+def test_pipeline_executes_numerical_transformation():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [
+                0.0,
+                3.0,
+                8.0,
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "numerical_transformation",
+        ],
+        parameters_by_method={
+            "numerical_transformation": {
+                "strategy": "sqrt",
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    transformed = result.result[
+        "result"
+    ]
+
+    assert transformed[
+        "values"
+    ] == pytest.approx(
+        [
+            0.0,
+            math.sqrt(3.0),
+            math.sqrt(8.0),
         ]
     )
