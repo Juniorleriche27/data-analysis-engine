@@ -3772,3 +3772,109 @@ def test_pipeline_executes_mean_confidence_interval():
         < statistics["mean"]
         < statistics["upper_bound"]
     )
+
+
+def test_pipeline_executes_bootstrap_mean_confidence_interval():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [
+                1.0,
+                2.0,
+                3.0,
+                4.0,
+                5.0,
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "bootstrap_mean_confidence_interval",
+        ],
+        parameters_by_method={
+            "bootstrap_mean_confidence_interval": {
+                "n_resamples": 500,
+                "random_state": 42,
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    statistics = result.result[
+        "result"
+    ]
+
+    assert statistics[
+        "observed_mean"
+    ] == pytest.approx(
+        3.0
+    )
+
+    assert (
+        statistics[
+            "lower_bound"
+        ]
+        <= 3.0
+        <= statistics[
+            "upper_bound"
+        ]
+    )
+
+
+def test_pipeline_executes_permutation_mean_difference_test():
+    dataframe = pd.DataFrame(
+        {
+            "control": [
+                1.0,
+                2.0,
+                1.0,
+                2.0,
+            ],
+            "treatment": [
+                8.0,
+                9.0,
+                8.0,
+                9.0,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "permutation_mean_difference_test",
+        ],
+        parameters_by_method={
+            "permutation_mean_difference_test": {
+                "n_resamples": 1000,
+                "random_state": 42,
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    statistics = result.result[
+        "result"
+    ]
+
+    assert statistics[
+        "columns"
+    ] == [
+        "control",
+        "treatment",
+    ]
+
+    assert statistics[
+        "observed_mean_difference"
+    ] < 0.0

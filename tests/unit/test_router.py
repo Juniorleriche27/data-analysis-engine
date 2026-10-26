@@ -2921,3 +2921,73 @@ def test_router_discovers_mean_confidence_interval():
     }
 
     assert "mean_confidence_interval" in candidates
+
+
+def test_router_discovers_bootstrap_mean_confidence_interval():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                ]
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "bootstrap_mean_confidence_interval"
+        in candidates
+    )
+
+
+def test_router_discovers_permutation_mean_difference_test():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                ],
+                "cost": [
+                    8.0,
+                    12.0,
+                    19.0,
+                    25.0,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "permutation_mean_difference_test"
+        in candidates
+    )

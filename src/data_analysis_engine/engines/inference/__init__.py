@@ -10,8 +10,18 @@ from data_analysis_engine.engines.inference.confidence_intervals import (
     MeanConfidenceInterval,
 )
 
+from data_analysis_engine.engines.inference.bootstrap import (
+    BootstrapMeanConfidenceInterval,
+)
+
+from data_analysis_engine.engines.inference.permutation import (
+    PermutationMeanDifferenceTest,
+)
+
 __all__ = [
     "DistributionShapeStatistics",
     "AdvancedQuantiles",
     "MeanConfidenceInterval",
+    "BootstrapMeanConfidenceInterval",
+    "PermutationMeanDifferenceTest",
 ]

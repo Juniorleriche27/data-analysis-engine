@@ -238,6 +238,16 @@ from data_analysis_engine.engines.inference.confidence_intervals import (
     MeanConfidenceInterval,
 )
 
+
+from data_analysis_engine.engines.inference.bootstrap import (
+    BootstrapMeanConfidenceInterval,
+)
+
+
+from data_analysis_engine.engines.inference.permutation import (
+    PermutationMeanDifferenceTest,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -318,6 +328,8 @@ BUILTIN_METHODS = (
     DistributionShapeStatistics,
     AdvancedQuantiles,
     MeanConfidenceInterval,
+    BootstrapMeanConfidenceInterval,
+    PermutationMeanDifferenceTest,
 )
 
 
