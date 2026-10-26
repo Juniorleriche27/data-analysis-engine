@@ -110,6 +110,9 @@ from data_analysis_engine.engines.validation.constant_columns import (
 from data_analysis_engine.engines.validation.duplicate_rows import (
     DuplicateRowDiagnostic,
 )
+from data_analysis_engine.engines.validation.non_finite import (
+    NonFiniteValueDiagnostic,
+)
 from data_analysis_engine.engines.timeseries.interval_calibration import (
     ForecastIntervalCalibration,
 )
@@ -215,6 +218,7 @@ BUILTIN_METHODS = (
     MissingValueDiagnostic,
     ConstantColumnDiagnostic,
     DuplicateRowDiagnostic,
+    NonFiniteValueDiagnostic,
 )
 
 

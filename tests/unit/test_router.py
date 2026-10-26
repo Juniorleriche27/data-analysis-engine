@@ -2259,3 +2259,79 @@ def test_router_discovers_duplicate_row_diagnostic():
         "duplicate_row_diagnostic"
         in candidates
     )
+
+
+def test_router_discovers_non_finite_value_diagnostic():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    float("inf"),
+                    40.0,
+                ],
+                "category": [
+                    "A",
+                    "B",
+                    "C",
+                    "D",
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "non_finite_value_diagnostic"
+        in candidates
+    )
+
+
+def test_router_discovers_non_finite_value_diagnostic():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    float("inf"),
+                    40.0,
+                ],
+                "category": [
+                    "A",
+                    "B",
+                    "C",
+                    "D",
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "non_finite_value_diagnostic"
+        in candidates
+    )

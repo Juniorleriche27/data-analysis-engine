@@ -2946,3 +2946,52 @@ def test_pipeline_executes_duplicate_row_diagnostic_with_missing_values():
     ] == 1
 
     assert result.rows_dropped == 0
+
+
+def test_pipeline_executes_non_finite_value_diagnostic():
+    dataframe = pd.DataFrame(
+        {
+            "value": [
+                10.0,
+                float("inf"),
+                None,
+                float("-inf"),
+                50.0,
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "non_finite_value_diagnostic",
+        ],
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert diagnostic[
+        "total_count"
+    ] == 5
+
+    assert diagnostic[
+        "missing_count"
+    ] == 1
+
+    assert diagnostic[
+        "infinity_count"
+    ] == 2
+
+    assert diagnostic[
+        "non_finite_count"
+    ] == 3
+
+    assert result.rows_dropped == 0
