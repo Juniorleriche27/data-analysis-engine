@@ -3494,3 +3494,56 @@ def test_pipeline_executes_numerical_transformation():
             math.sqrt(8.0),
         ]
     )
+
+
+def test_pipeline_executes_winsorization():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [
+                0.0,
+                10.0,
+                20.0,
+                30.0,
+                100.0,
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "winsorization",
+        ],
+        parameters_by_method={
+            "winsorization": {
+                "lower_quantile": 0.20,
+                "upper_quantile": 0.80,
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    transformed = result.result[
+        "result"
+    ]
+
+    assert transformed[
+        "clipped_count"
+    ] == 2
+
+    assert transformed[
+        "values"
+    ] == pytest.approx(
+        [
+            8.0,
+            10.0,
+            20.0,
+            30.0,
+            44.0,
+        ]
+    )

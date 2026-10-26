@@ -2727,3 +2727,35 @@ def test_router_discovers_numerical_transformation():
         "numerical_transformation"
         in candidates
     )
+
+
+def test_router_discovers_winsorization():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    1000.0,
+                ]
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "winsorization"
+        in candidates
+    )

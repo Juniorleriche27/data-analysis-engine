@@ -10,8 +10,13 @@ from data_analysis_engine.engines.preprocessing.transformations import (
     NumericalTransformation,
 )
 
+from data_analysis_engine.engines.preprocessing.winsorization import (
+    Winsorization,
+)
+
 __all__ = [
     "MissingValueImputation",
     "FeatureScaling",
     "NumericalTransformation",
+    "Winsorization",
 ]

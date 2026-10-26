@@ -208,6 +208,11 @@ from data_analysis_engine.engines.preprocessing.transformations import (
     NumericalTransformation,
 )
 
+
+from data_analysis_engine.engines.preprocessing.winsorization import (
+    Winsorization,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -282,6 +287,7 @@ BUILTIN_METHODS = (
     MissingValueImputation,
     FeatureScaling,
     NumericalTransformation,
+    Winsorization,
 )
 
 
