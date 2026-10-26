@@ -3359,3 +3359,49 @@ def test_pipeline_executes_data_quality_report():
             "dataset_checks"
         ]
     )
+
+
+def test_pipeline_executes_missing_value_imputation():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [
+                10.0,
+                None,
+                30.0,
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "missing_value_imputation",
+        ],
+        parameters_by_method={
+            "missing_value_imputation": {
+                "strategy": "mean",
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    transformed = result.result[
+        "result"
+    ]
+
+    assert transformed[
+        "imputed_count"
+    ] == 1
+
+    assert transformed[
+        "values"
+    ] == [
+        10.0,
+        20.0,
+        30.0,
+    ]

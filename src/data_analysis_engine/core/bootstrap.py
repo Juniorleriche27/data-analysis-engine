@@ -193,6 +193,11 @@ from data_analysis_engine.engines.validation.quality_report import (
     DataQualityReport,
 )
 
+
+from data_analysis_engine.engines.preprocessing.imputation import (
+    MissingValueImputation,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -264,6 +269,7 @@ BUILTIN_METHODS = (
     VarianceDiagnostic,
     MulticollinearityDiagnostic,
     DataQualityReport,
+    MissingValueImputation,
 )
 
 
