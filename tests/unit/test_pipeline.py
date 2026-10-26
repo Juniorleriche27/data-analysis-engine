@@ -4017,3 +4017,132 @@ def test_pipeline_executes_paired_mean_difference_t_test():
     assert statistics[
         "observed_mean_difference"
     ] > 0.0
+
+
+def test_pipeline_executes_one_sample_proportion_z_test():
+    dataframe = pd.DataFrame(
+        {
+            "converted": [
+                1,
+                1,
+                0,
+                1,
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "one_sample_proportion_z_test",
+        ],
+        parameters_by_method={
+            "one_sample_proportion_z_test": {
+                "hypothesized_proportion": 0.5,
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    statistics = result.result[
+        "result"
+    ]
+
+    assert statistics[
+        "observed_proportion"
+    ] == pytest.approx(
+        0.75
+    )
+
+
+def test_pipeline_executes_two_sample_proportion_z_test():
+    dataframe = pd.DataFrame(
+        {
+            "control": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+            ],
+            "treatment": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                0,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "two_sample_proportion_z_test",
+        ],
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    statistics = result.result[
+        "result"
+    ]
+
+    assert statistics[
+        "first_proportion"
+    ] < statistics[
+        "second_proportion"
+    ]
+
+
+def test_pipeline_executes_chi_square_independence_test():
+    dataframe = pd.DataFrame(
+        {
+            "segment": (
+                ["A"] * 10
+                + ["B"] * 10
+            ),
+            "choice": (
+                ["yes"] * 9
+                + ["no"]
+                + ["yes"]
+                + ["no"] * 9
+            ),
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "chi_square_independence_test",
+        ],
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    statistics = result.result[
+        "result"
+    ]
+
+    assert statistics[
+        "chi_square_statistic"
+    ] > 0.0
+
+    assert statistics[
+        "cramers_v"
+    ] > 0.0

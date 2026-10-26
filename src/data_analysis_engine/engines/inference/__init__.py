@@ -24,6 +24,15 @@ from data_analysis_engine.engines.inference.parametric_tests import (
     PairedMeanDifferenceTTest,
 )
 
+from data_analysis_engine.engines.inference.proportion_tests import (
+    OneSampleProportionZTest,
+    TwoSampleProportionZTest,
+)
+
+from data_analysis_engine.engines.inference.chi_square import (
+    ChiSquareIndependenceTest,
+)
+
 __all__ = [
     "DistributionShapeStatistics",
     "AdvancedQuantiles",
@@ -33,4 +42,7 @@ __all__ = [
     "OneSampleMeanTTest",
     "WelchMeanDifferenceTTest",
     "PairedMeanDifferenceTTest",
+    "OneSampleProportionZTest",
+    "TwoSampleProportionZTest",
+    "ChiSquareIndependenceTest",
 ]

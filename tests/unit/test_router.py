@@ -3099,3 +3099,111 @@ def test_router_discovers_paired_mean_difference_t_test():
         "paired_mean_difference_t_test"
         in candidates
     )
+
+
+def test_router_discovers_one_sample_proportion_z_test():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "converted": [
+                    1,
+                    0,
+                    1,
+                    1,
+                ]
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "one_sample_proportion_z_test"
+        in candidates
+    )
+
+
+def test_router_discovers_two_sample_proportion_z_test():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "control": [
+                    1,
+                    0,
+                    1,
+                    0,
+                ],
+                "treatment": [
+                    1,
+                    1,
+                    1,
+                    0,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "two_sample_proportion_z_test"
+        in candidates
+    )
+
+
+def test_router_discovers_chi_square_independence_test():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "segment": [
+                    "A",
+                    "A",
+                    "B",
+                    "B",
+                ],
+                "choice": [
+                    "yes",
+                    "no",
+                    "yes",
+                    "no",
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "chi_square_independence_test"
+        in candidates
+    )
