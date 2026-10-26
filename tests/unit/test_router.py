@@ -2869,3 +2869,55 @@ def test_router_discovers_distribution_shape_statistics():
         "distribution_shape_statistics"
         in candidates
     )
+
+
+def test_router_discovers_advanced_quantiles():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                ]
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(profile)
+
+    candidates = {
+        candidate.method
+        for candidate in report.candidates
+    }
+
+    assert "advanced_quantiles" in candidates
+
+
+def test_router_discovers_mean_confidence_interval():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                ]
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(profile)
+
+    candidates = {
+        candidate.method
+        for candidate in report.candidates
+    }
+
+    assert "mean_confidence_interval" in candidates

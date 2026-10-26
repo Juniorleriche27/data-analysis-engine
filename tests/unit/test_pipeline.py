@@ -3707,3 +3707,68 @@ def test_pipeline_executes_distribution_shape_statistics():
     ] == pytest.approx(
         -1.3
     )
+
+
+def test_pipeline_executes_advanced_quantiles():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [
+                1.0,
+                2.0,
+                3.0,
+                4.0,
+                5.0,
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "advanced_quantiles",
+        ],
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    statistics = result.result["result"]
+
+    assert statistics["median"] == pytest.approx(3.0)
+    assert statistics["iqr"] == pytest.approx(2.0)
+
+
+def test_pipeline_executes_mean_confidence_interval():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [
+                1.0,
+                2.0,
+                3.0,
+                4.0,
+                5.0,
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "mean_confidence_interval",
+        ],
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    statistics = result.result["result"]
+
+    assert statistics["mean"] == pytest.approx(3.0)
+
+    assert (
+        statistics["lower_bound"]
+        < statistics["mean"]
+        < statistics["upper_bound"]
+    )

@@ -228,6 +228,16 @@ from data_analysis_engine.engines.inference.distribution_shape import (
     DistributionShapeStatistics,
 )
 
+
+from data_analysis_engine.engines.inference.quantiles import (
+    AdvancedQuantiles,
+)
+
+
+from data_analysis_engine.engines.inference.confidence_intervals import (
+    MeanConfidenceInterval,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -306,6 +316,8 @@ BUILTIN_METHODS = (
     CategoricalEncoding,
     TrainTestSplit,
     DistributionShapeStatistics,
+    AdvancedQuantiles,
+    MeanConfidenceInterval,
 )
 
 
