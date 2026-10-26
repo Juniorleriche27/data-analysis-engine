@@ -30,6 +30,10 @@ from data_analysis_engine.engines.validation.temporal_quality import (
     TemporalQualityDiagnostic,
 )
 
+from data_analysis_engine.engines.validation.variance import (
+    VarianceDiagnostic,
+)
+
 __all__ = [
     "MissingValueDiagnostic",
     "ConstantColumnDiagnostic",
@@ -39,4 +43,5 @@ __all__ = [
     "CardinalityDiagnostic",
     "TypeConsistencyDiagnostic",
     "TemporalQualityDiagnostic",
+    "VarianceDiagnostic",
 ]

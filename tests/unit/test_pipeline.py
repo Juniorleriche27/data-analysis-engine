@@ -3218,3 +3218,33 @@ def test_pipeline_executes_temporal_quality_diagnostic():
     assert diagnostic[
         "risk_level"
     ] == "none"
+
+
+def test_pipeline_executes_variance_diagnostic():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [
+                10.0,
+                20.0,
+                30.0,
+                40.0,
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "variance_diagnostic",
+        ],
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    diagnostic = result.result["result"]
+
+    assert diagnostic["variance"] > 0.0
+    assert diagnostic["is_zero_variance"] is False
+    assert diagnostic["variance_status"] == "adequate_variance"

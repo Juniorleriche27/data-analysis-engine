@@ -2493,3 +2493,41 @@ def test_router_discovers_temporal_quality_diagnostic():
         "temporal_quality_diagnostic"
         in candidates
     )
+
+
+def test_router_discovers_variance_diagnostic():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                ],
+                "category": [
+                    "A",
+                    "B",
+                    "C",
+                    "D",
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "variance_diagnostic"
+        in candidates
+    )

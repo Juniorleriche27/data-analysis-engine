@@ -178,6 +178,11 @@ from data_analysis_engine.engines.validation.temporal_quality import (
     TemporalQualityDiagnostic,
 )
 
+
+from data_analysis_engine.engines.validation.variance import (
+    VarianceDiagnostic,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -246,6 +251,7 @@ BUILTIN_METHODS = (
     CardinalityDiagnostic,
     TypeConsistencyDiagnostic,
     TemporalQualityDiagnostic,
+    VarianceDiagnostic,
 )
 
 
