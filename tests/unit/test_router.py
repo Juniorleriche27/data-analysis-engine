@@ -2837,3 +2837,35 @@ def test_router_discovers_train_test_split():
         "train_test_split"
         in candidates
     )
+
+
+def test_router_discovers_distribution_shape_statistics():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                ]
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "distribution_shape_statistics"
+        in candidates
+    )

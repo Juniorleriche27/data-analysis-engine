@@ -223,6 +223,11 @@ from data_analysis_engine.engines.preprocessing.splitting import (
     TrainTestSplit,
 )
 
+
+from data_analysis_engine.engines.inference.distribution_shape import (
+    DistributionShapeStatistics,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -300,6 +305,7 @@ BUILTIN_METHODS = (
     Winsorization,
     CategoricalEncoding,
     TrainTestSplit,
+    DistributionShapeStatistics,
 )
 
 

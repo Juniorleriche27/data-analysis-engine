@@ -3664,3 +3664,46 @@ def test_pipeline_executes_train_test_split():
         ]
         is True
     )
+
+
+def test_pipeline_executes_distribution_shape_statistics():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [
+                -2.0,
+                -1.0,
+                0.0,
+                1.0,
+                2.0,
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "distribution_shape_statistics",
+        ],
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    statistics = result.result[
+        "result"
+    ]
+
+    assert statistics[
+        "skewness"
+    ] == pytest.approx(
+        0.0
+    )
+
+    assert statistics[
+        "excess_kurtosis"
+    ] == pytest.approx(
+        -1.3
+    )
