@@ -2834,3 +2834,61 @@ def test_pipeline_executes_missing_value_diagnostic():
     assert diagnostic[
         "severity"
     ] == "high"
+
+
+def test_pipeline_executes_constant_column_diagnostic():
+    dataframe = pd.DataFrame(
+        {
+            "category": [
+                "A",
+                "A",
+                "A",
+                "A",
+                "A",
+                "A",
+                "A",
+                "A",
+                "A",
+                "B",
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "constant_column_diagnostic",
+        ],
+        parameters_by_method={
+            "constant_column_diagnostic": {
+                "dominance_threshold": 0.90,
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert diagnostic[
+        "dominant_value"
+    ] == "A"
+
+    assert diagnostic[
+        "dominant_ratio"
+    ] == pytest.approx(
+        0.9
+    )
+
+    assert (
+        diagnostic[
+            "is_quasi_constant"
+        ]
+        is True
+    )
