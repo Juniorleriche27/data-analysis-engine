@@ -18,10 +18,15 @@ from data_analysis_engine.engines.preprocessing.categorical_encoding import (
     CategoricalEncoding,
 )
 
+from data_analysis_engine.engines.preprocessing.splitting import (
+    TrainTestSplit,
+)
+
 __all__ = [
     "MissingValueImputation",
     "FeatureScaling",
     "NumericalTransformation",
     "Winsorization",
     "CategoricalEncoding",
+    "TrainTestSplit",
 ]

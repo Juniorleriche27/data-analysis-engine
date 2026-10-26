@@ -2797,3 +2797,43 @@ def test_router_discovers_categorical_encoding():
         "categorical_encoding"
         in candidates
     )
+
+
+def test_router_discovers_train_test_split():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10,
+                    20,
+                    30,
+                    40,
+                    50,
+                ],
+                "category": [
+                    "A",
+                    "B",
+                    "A",
+                    "B",
+                    "C",
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "train_test_split"
+        in candidates
+    )

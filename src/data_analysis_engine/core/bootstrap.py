@@ -218,6 +218,11 @@ from data_analysis_engine.engines.preprocessing.categorical_encoding import (
     CategoricalEncoding,
 )
 
+
+from data_analysis_engine.engines.preprocessing.splitting import (
+    TrainTestSplit,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -294,6 +299,7 @@ BUILTIN_METHODS = (
     NumericalTransformation,
     Winsorization,
     CategoricalEncoding,
+    TrainTestSplit,
 )
 
 

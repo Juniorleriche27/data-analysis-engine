@@ -3597,3 +3597,70 @@ def test_pipeline_executes_categorical_encoding():
         1,
         0,
     ]
+
+
+def test_pipeline_executes_train_test_split():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [
+                10,
+                20,
+                30,
+                40,
+                50,
+            ],
+            "category": [
+                "A",
+                "B",
+                "A",
+                "B",
+                "C",
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "train_test_split",
+        ],
+        parameters_by_method={
+            "train_test_split": {
+                "strategy": "random",
+                "test_size": 0.4,
+                "random_state": 42,
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    split = result.result[
+        "result"
+    ]
+
+    assert split[
+        "train_count"
+    ] == 3
+
+    assert split[
+        "test_count"
+    ] == 2
+
+    assert (
+        split[
+            "partitions_disjoint"
+        ]
+        is True
+    )
+
+    assert (
+        split[
+            "complete_partition"
+        ]
+        is True
+    )
