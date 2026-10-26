@@ -34,6 +34,10 @@ from data_analysis_engine.engines.validation.variance import (
     VarianceDiagnostic,
 )
 
+from data_analysis_engine.engines.validation.multicollinearity import (
+    MulticollinearityDiagnostic,
+)
+
 __all__ = [
     "MissingValueDiagnostic",
     "ConstantColumnDiagnostic",
@@ -44,4 +48,5 @@ __all__ = [
     "TypeConsistencyDiagnostic",
     "TemporalQualityDiagnostic",
     "VarianceDiagnostic",
+    "MulticollinearityDiagnostic",
 ]

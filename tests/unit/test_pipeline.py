@@ -3248,3 +3248,63 @@ def test_pipeline_executes_variance_diagnostic():
     assert diagnostic["variance"] > 0.0
     assert diagnostic["is_zero_variance"] is False
     assert diagnostic["variance_status"] == "adequate_variance"
+
+
+def test_pipeline_executes_multicollinearity_diagnostic():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [
+                10.0,
+                20.0,
+                30.0,
+                40.0,
+                50.0,
+                60.0,
+            ],
+            "cost": [
+                8.0,
+                12.0,
+                21.0,
+                19.0,
+                37.0,
+                31.0,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "multicollinearity_diagnostic",
+        ],
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert diagnostic[
+        "column_count"
+    ] == 2
+
+    assert diagnostic[
+        "complete_row_count"
+    ] == 6
+
+    assert (
+        "sales"
+        in diagnostic[
+            "vif_by_column"
+        ]
+    )
+
+    assert (
+        "cost"
+        in diagnostic[
+            "vif_by_column"
+        ]
+    )

@@ -183,6 +183,11 @@ from data_analysis_engine.engines.validation.variance import (
     VarianceDiagnostic,
 )
 
+
+from data_analysis_engine.engines.validation.multicollinearity import (
+    MulticollinearityDiagnostic,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -252,6 +257,7 @@ BUILTIN_METHODS = (
     TypeConsistencyDiagnostic,
     TemporalQualityDiagnostic,
     VarianceDiagnostic,
+    MulticollinearityDiagnostic,
 )
 
 
