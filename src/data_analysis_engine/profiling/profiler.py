@@ -1,5 +1,6 @@
 from typing import Any
 
+import numpy as np
 import pandas as pd
 
 from data_analysis_engine.datasets.dataset import Dataset
@@ -252,16 +253,30 @@ class DataProfiler:
             semantic_type == "numeric"
             and role != "identifier"
         ):
+            numeric_values = pd.to_numeric(
+                non_missing,
+                errors="coerce",
+            )
+
+            finite_values = numeric_values[
+                np.isfinite(
+                    numeric_values
+                )
+            ]
+
+            if finite_values.empty:
+                return {}
+
             return {
-                "mean": float(non_missing.mean()),
-                "median": float(non_missing.median()),
+                "mean": float(finite_values.mean()),
+                "median": float(finite_values.median()),
                 "std": (
-                    float(non_missing.std())
-                    if len(non_missing) > 1
+                    float(finite_values.std())
+                    if len(finite_values) > 1
                     else 0.0
                 ),
-                "minimum": float(non_missing.min()),
-                "maximum": float(non_missing.max()),
+                "minimum": float(finite_values.min()),
+                "maximum": float(finite_values.max()),
             }
 
         if semantic_type == "datetime":
