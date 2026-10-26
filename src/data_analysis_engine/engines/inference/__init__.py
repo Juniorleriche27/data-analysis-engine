@@ -18,10 +18,19 @@ from data_analysis_engine.engines.inference.permutation import (
     PermutationMeanDifferenceTest,
 )
 
+from data_analysis_engine.engines.inference.parametric_tests import (
+    OneSampleMeanTTest,
+    WelchMeanDifferenceTTest,
+    PairedMeanDifferenceTTest,
+)
+
 __all__ = [
     "DistributionShapeStatistics",
     "AdvancedQuantiles",
     "MeanConfidenceInterval",
     "BootstrapMeanConfidenceInterval",
     "PermutationMeanDifferenceTest",
+    "OneSampleMeanTTest",
+    "WelchMeanDifferenceTTest",
+    "PairedMeanDifferenceTTest",
 ]

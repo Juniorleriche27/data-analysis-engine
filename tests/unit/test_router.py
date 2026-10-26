@@ -2991,3 +2991,111 @@ def test_router_discovers_permutation_mean_difference_test():
         "permutation_mean_difference_test"
         in candidates
     )
+
+
+def test_router_discovers_one_sample_mean_t_test():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                ]
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "one_sample_mean_t_test"
+        in candidates
+    )
+
+
+def test_router_discovers_welch_mean_difference_t_test():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                ],
+                "cost": [
+                    8.0,
+                    12.0,
+                    18.0,
+                    25.0,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "welch_mean_difference_t_test"
+        in candidates
+    )
+
+
+def test_router_discovers_paired_mean_difference_t_test():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "before": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                ],
+                "after": [
+                    8.0,
+                    18.0,
+                    28.0,
+                    38.0,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "paired_mean_difference_t_test"
+        in candidates
+    )

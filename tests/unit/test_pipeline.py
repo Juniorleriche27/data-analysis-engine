@@ -3878,3 +3878,142 @@ def test_pipeline_executes_permutation_mean_difference_test():
     assert statistics[
         "observed_mean_difference"
     ] < 0.0
+
+
+def test_pipeline_executes_one_sample_mean_t_test():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [
+                1.0,
+                2.0,
+                3.0,
+                4.0,
+                5.0,
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "one_sample_mean_t_test",
+        ],
+        parameters_by_method={
+            "one_sample_mean_t_test": {
+                "hypothesized_mean": 3.0,
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    statistics = result.result[
+        "result"
+    ]
+
+    assert statistics[
+        "sample_mean"
+    ] == pytest.approx(
+        3.0
+    )
+
+    assert statistics[
+        "p_value"
+    ] == pytest.approx(
+        1.0
+    )
+
+
+def test_pipeline_executes_welch_mean_difference_t_test():
+    dataframe = pd.DataFrame(
+        {
+            "control": [
+                1.0,
+                2.0,
+                1.0,
+                2.0,
+            ],
+            "treatment": [
+                8.0,
+                9.0,
+                8.0,
+                9.0,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "welch_mean_difference_t_test",
+        ],
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    statistics = result.result[
+        "result"
+    ]
+
+    assert statistics[
+        "columns"
+    ] == [
+        "control",
+        "treatment",
+    ]
+
+    assert statistics[
+        "p_value"
+    ] < 0.05
+
+
+def test_pipeline_executes_paired_mean_difference_t_test():
+    dataframe = pd.DataFrame(
+        {
+            "before": [
+                10.0,
+                20.0,
+                30.0,
+                40.0,
+            ],
+            "after": [
+                8.0,
+                18.0,
+                27.0,
+                37.0,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "paired_mean_difference_t_test",
+        ],
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    statistics = result.result[
+        "result"
+    ]
+
+    assert statistics[
+        "complete_pair_count"
+    ] == 4
+
+    assert statistics[
+        "observed_mean_difference"
+    ] > 0.0
