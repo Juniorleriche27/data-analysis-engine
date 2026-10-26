@@ -198,6 +198,11 @@ from data_analysis_engine.engines.preprocessing.imputation import (
     MissingValueImputation,
 )
 
+
+from data_analysis_engine.engines.preprocessing.scaling import (
+    FeatureScaling,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -270,6 +275,7 @@ BUILTIN_METHODS = (
     MulticollinearityDiagnostic,
     DataQualityReport,
     MissingValueImputation,
+    FeatureScaling,
 )
 
 

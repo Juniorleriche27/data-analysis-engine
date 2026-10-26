@@ -2657,3 +2657,41 @@ def test_router_discovers_missing_value_imputation():
         "missing_value_imputation"
         in candidates
     )
+
+
+def test_router_discovers_feature_scaling():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                ],
+                "category": [
+                    "A",
+                    "B",
+                    "A",
+                    "B",
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "feature_scaling"
+        in candidates
+    )

@@ -3405,3 +3405,47 @@ def test_pipeline_executes_missing_value_imputation():
         20.0,
         30.0,
     ]
+
+
+def test_pipeline_executes_feature_scaling():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [
+                10.0,
+                20.0,
+                30.0,
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "feature_scaling",
+        ],
+        parameters_by_method={
+            "feature_scaling": {
+                "strategy": "minmax",
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    transformed = result.result[
+        "result"
+    ]
+
+    assert transformed[
+        "values"
+    ] == pytest.approx(
+        [
+            0.0,
+            0.5,
+            1.0,
+        ]
+    )
