@@ -168,6 +168,11 @@ from data_analysis_engine.engines.validation.cardinality import (
     CardinalityDiagnostic,
 )
 
+
+from data_analysis_engine.engines.validation.type_consistency import (
+    TypeConsistencyDiagnostic,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -234,6 +239,7 @@ BUILTIN_METHODS = (
     NonFiniteValueDiagnostic,
     OutlierDiagnostic,
     CardinalityDiagnostic,
+    TypeConsistencyDiagnostic,
 )
 
 

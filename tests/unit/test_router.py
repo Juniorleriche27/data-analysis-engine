@@ -2417,3 +2417,41 @@ def test_router_discovers_cardinality_diagnostic():
         "cardinality_diagnostic"
         in candidates
     )
+
+
+def test_router_discovers_type_consistency_diagnostic():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "category": [
+                    "A",
+                    "B",
+                    "C",
+                    "D",
+                ],
+                "sales": [
+                    10,
+                    20,
+                    30,
+                    40,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "type_consistency_diagnostic"
+        in candidates
+    )

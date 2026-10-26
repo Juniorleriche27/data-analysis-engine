@@ -3126,3 +3126,46 @@ def test_pipeline_executes_cardinality_diagnostic():
     assert diagnostic["unique_count"] == 3
     assert diagnostic["non_missing_count"] == 6
     assert diagnostic["cardinality_status"] == "normal"
+
+
+def test_pipeline_executes_type_consistency_diagnostic():
+    dataframe = pd.DataFrame(
+        {
+            "category": [
+                "A",
+                "B",
+                "C",
+                "D",
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "type_consistency_diagnostic",
+        ],
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert diagnostic[
+        "type_families"
+    ] == ["string"]
+
+    assert (
+        diagnostic[
+            "is_homogeneous"
+        ]
+        is True
+    )
+
+    assert diagnostic[
+        "consistency_status"
+    ] == "consistent"

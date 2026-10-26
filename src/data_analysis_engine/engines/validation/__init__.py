@@ -22,6 +22,10 @@ from data_analysis_engine.engines.validation.cardinality import (
     CardinalityDiagnostic,
 )
 
+from data_analysis_engine.engines.validation.type_consistency import (
+    TypeConsistencyDiagnostic,
+)
+
 __all__ = [
     "MissingValueDiagnostic",
     "ConstantColumnDiagnostic",
@@ -29,4 +33,5 @@ __all__ = [
     "NonFiniteValueDiagnostic",
     "OutlierDiagnostic",
     "CardinalityDiagnostic",
+    "TypeConsistencyDiagnostic",
 ]
