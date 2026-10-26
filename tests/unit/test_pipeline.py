@@ -3169,3 +3169,52 @@ def test_pipeline_executes_type_consistency_diagnostic():
     assert diagnostic[
         "consistency_status"
     ] == "consistent"
+
+
+def test_pipeline_executes_temporal_quality_diagnostic():
+    dataframe = pd.DataFrame(
+        {
+            "timestamp": pd.date_range(
+                "2026-01-01",
+                periods=5,
+                freq="h",
+            ),
+            "sales": [
+                10,
+                20,
+                30,
+                40,
+                50,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "temporal_quality_diagnostic",
+        ],
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert diagnostic[
+        "parseable_count"
+    ] == 5
+
+    assert (
+        diagnostic[
+            "is_regular"
+        ]
+        is True
+    )
+
+    assert diagnostic[
+        "risk_level"
+    ] == "none"

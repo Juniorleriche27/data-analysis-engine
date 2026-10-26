@@ -173,6 +173,11 @@ from data_analysis_engine.engines.validation.type_consistency import (
     TypeConsistencyDiagnostic,
 )
 
+
+from data_analysis_engine.engines.validation.temporal_quality import (
+    TemporalQualityDiagnostic,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -240,6 +245,7 @@ BUILTIN_METHODS = (
     OutlierDiagnostic,
     CardinalityDiagnostic,
     TypeConsistencyDiagnostic,
+    TemporalQualityDiagnostic,
 )
 
 

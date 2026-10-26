@@ -2455,3 +2455,41 @@ def test_router_discovers_type_consistency_diagnostic():
         "type_consistency_diagnostic"
         in candidates
     )
+
+
+def test_router_discovers_temporal_quality_diagnostic():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "timestamp": pd.date_range(
+                    "2026-01-01",
+                    periods=5,
+                    freq="h",
+                ),
+                "sales": [
+                    10,
+                    20,
+                    30,
+                    40,
+                    50,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "temporal_quality_diagnostic"
+        in candidates
+    )
