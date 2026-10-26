@@ -210,6 +210,26 @@ def build_ai_analysis_plan_schema(
                         "parameters": {
                             "type": "object",
                         },
+                        "bindings": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "oneOf": [
+                                    {
+                                        "type": "string",
+                                        "minLength": 1,
+                                    },
+                                    {
+                                        "type": "array",
+                                        "minItems": 1,
+                                        "uniqueItems": True,
+                                        "items": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                        },
+                                    },
+                                ]
+                            },
+                        },
                     },
                 },
             },

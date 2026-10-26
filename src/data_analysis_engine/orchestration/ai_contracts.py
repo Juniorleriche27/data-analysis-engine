@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 
@@ -31,7 +31,9 @@ def _assert_no_result_injection(
         Mapping,
     ):
         for key, nested_value in value.items():
-            key_text = str(key)
+            key_text = str(
+                key
+            )
 
             if (
                 key_text.lower()
@@ -45,7 +47,9 @@ def _assert_no_result_injection(
 
             _assert_no_result_injection(
                 nested_value,
-                path=f"{path}.{key_text}",
+                path=(
+                    f"{path}.{key_text}"
+                ),
             )
 
     elif isinstance(
@@ -57,8 +61,114 @@ def _assert_no_result_injection(
         ):
             _assert_no_result_injection(
                 nested_value,
-                path=f"{path}[{index}]",
+                path=(
+                    f"{path}[{index}]"
+                ),
             )
+
+
+def _validate_bindings(
+    value: Any,
+) -> dict[str, Any]:
+    if value is None:
+        return {}
+
+    if not isinstance(
+        value,
+        Mapping,
+    ):
+        raise AIOrchestrationContractError(
+            "'bindings' must be an object."
+        )
+
+    normalized: dict[
+        str,
+        Any,
+    ] = {}
+
+    for parameter_name, source in value.items():
+        if (
+            not isinstance(
+                parameter_name,
+                str,
+            )
+            or not parameter_name.strip()
+        ):
+            raise AIOrchestrationContractError(
+                "Binding parameter names must "
+                "be non-empty strings."
+            )
+
+        parameter_name = (
+            parameter_name.strip()
+        )
+
+        if isinstance(
+            source,
+            str,
+        ):
+            if not source.strip():
+                raise AIOrchestrationContractError(
+                    "Bound column names must "
+                    "be non-empty strings."
+                )
+
+            normalized[
+                parameter_name
+            ] = source.strip()
+
+        elif isinstance(
+            source,
+            (list, tuple),
+        ):
+            if not source:
+                raise AIOrchestrationContractError(
+                    "Column-list bindings "
+                    "cannot be empty."
+                )
+
+            columns: list[str] = []
+
+            for column in source:
+                if (
+                    not isinstance(
+                        column,
+                        str,
+                    )
+                    or not column.strip()
+                ):
+                    raise AIOrchestrationContractError(
+                        "Every bound column must "
+                        "be a non-empty string."
+                    )
+
+                columns.append(
+                    column.strip()
+                )
+
+            if len(
+                columns
+            ) != len(
+                set(
+                    columns
+                )
+            ):
+                raise AIOrchestrationContractError(
+                    "Bindings cannot contain "
+                    "duplicate columns."
+                )
+
+            normalized[
+                parameter_name
+            ] = columns
+
+        else:
+            raise AIOrchestrationContractError(
+                "A binding source must be a column "
+                "name or a list of column names."
+            )
+
+    return normalized
 
 
 @dataclass(
@@ -68,6 +178,9 @@ class AIAnalysisCall:
     call_id: str
     method: str
     parameters: dict[str, Any]
+    bindings: dict[str, Any] = field(
+        default_factory=dict
+    )
 
     @classmethod
     def from_mapping(
@@ -88,10 +201,13 @@ class AIAnalysisCall:
             "call_id",
             "method",
             "parameters",
+            "bindings",
         }
 
         unknown_keys = (
-            set(payload.keys())
+            set(
+                payload.keys()
+            )
             - allowed_keys
         )
 
@@ -166,11 +282,33 @@ class AIAnalysisCall:
             path="parameters",
         )
 
+        bindings = _validate_bindings(
+            payload.get(
+                "bindings",
+                {},
+            )
+        )
+
         return cls(
             call_id=call_id.strip(),
             method=method,
             parameters=normalized_parameters,
+            bindings=bindings,
         )
+
+    def as_dict(
+        self,
+    ) -> dict[str, Any]:
+        return {
+            "call_id": self.call_id,
+            "method": self.method,
+            "parameters": dict(
+                self.parameters
+            ),
+            "bindings": dict(
+                self.bindings
+            ),
+        }
 
 
 @dataclass(
@@ -204,7 +342,9 @@ class AIAnalysisPlan:
         }
 
         unknown_keys = (
-            set(payload.keys())
+            set(
+                payload.keys()
+            )
             - allowed_keys
         )
 
@@ -254,7 +394,9 @@ class AIAnalysisPlan:
         calls = tuple(
             AIAnalysisCall.from_mapping(
                 call,
-                registered_methods=registered_methods,
+                registered_methods=(
+                    registered_methods
+                ),
             )
             for call
             in raw_calls
@@ -269,7 +411,9 @@ class AIAnalysisPlan:
         if len(
             call_ids
         ) != len(
-            set(call_ids)
+            set(
+                call_ids
+            )
         ):
             raise AIOrchestrationContractError(
                 "Analysis call IDs must be unique."
@@ -279,3 +423,15 @@ class AIAnalysisPlan:
             plan_id=plan_id.strip(),
             calls=calls,
         )
+
+    def as_dict(
+        self,
+    ) -> dict[str, Any]:
+        return {
+            "plan_id": self.plan_id,
+            "calls": [
+                call.as_dict()
+                for call
+                in self.calls
+            ],
+        }
