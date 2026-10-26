@@ -1,0 +1,1847 @@
+{
+  "schema_version": "1.0",
+  "engine_release": "core-v1",
+  "native_method_count": 95,
+  "execution_policy": {
+    "llm_may_select_methods": true,
+    "llm_may_provide_parameters": true,
+    "llm_may_interpret_results": true,
+    "llm_may_compute_native_results": false,
+    "all_native_calculations_require_engine_execution": true
+  },
+  "methods": [
+    {
+      "name": "adaptive_forecast_ensemble_backtest",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Backtest an adaptive inverse-error weighted forecast ensemble where model weights at each origin use only forecast errors already observable before that origin.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "horizon",
+        "initial_train_size",
+        "metric",
+        "minimum_weight_observations",
+        "models",
+        "parameters_by_model",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "additive_seasonal_decomposition",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Decompose an ordered numerical series into trend, seasonal, and residual components using an additive moving-average decomposition.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "period",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "advanced_quantiles",
+      "category": "statistics",
+      "version": "1.0",
+      "description": "Calculate configurable empirical quantiles, interquartile range, percentile range, and robust distribution summaries.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "probabilities",
+        "values"
+      ]
+    },
+    {
+      "name": "autocorrelation",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Measure linear autocorrelation between a series and a lagged version of itself.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "lag",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "autocorrelation_function",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Compute sample autocorrelation coefficients for multiple positive lags.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "max_lag",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "automatic_forecast",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Automatically compare forecasting models using rolling-origin out-of-sample evaluation, select the best model, and produce final forecasts from the full historical series.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "horizon",
+        "initial_train_size",
+        "metric",
+        "models",
+        "parameters_by_model",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "automatic_forecast_reliability",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Automatically select a forecasting model, produce conformal-style forecast intervals, and evaluate their historical calibration.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "calibration_tolerance",
+        "coverage",
+        "horizon",
+        "initial_train_size",
+        "metric",
+        "minimum_calibration_observations",
+        "models",
+        "parameters_by_model",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "automatic_forecast_with_intervals",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Automatically select the best forecasting model using rolling-origin evaluation, forecast from the full history, and construct finite-sample conformal-style forecast intervals.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "coverage",
+        "horizon",
+        "initial_train_size",
+        "metric",
+        "minimum_calibration_observations",
+        "models",
+        "parameters_by_model",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "automatic_strategy_forecast",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Fairly compare individual forecasting models against an adaptive ensemble, select the best out-of-sample strategy, and produce the final forecast using all available historical data.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "horizon",
+        "initial_train_size",
+        "metric",
+        "minimum_weight_observations",
+        "models",
+        "parameters_by_model",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "automatic_strategy_forecast_reliability",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Select the best forecasting strategy, produce conformal forecast intervals, and diagnose their historical coverage using only calibration errors observable before each forecast origin.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "calibration_tolerance",
+        "coverage",
+        "horizon",
+        "initial_train_size",
+        "metric",
+        "minimum_calibration_observations",
+        "minimum_weight_observations",
+        "models",
+        "parameters_by_model",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "automatic_strategy_forecast_with_intervals",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Select the best forecasting strategy between individual models and an adaptive ensemble, produce the final forecast, and construct finite-sample conformal-style intervals from historical errors of the selected strategy.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "coverage",
+        "horizon",
+        "initial_train_size",
+        "metric",
+        "minimum_calibration_observations",
+        "minimum_weight_observations",
+        "models",
+        "parameters_by_model",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "autoregressive_forecast",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Fit an AR(p) model with an intercept using ordinary least squares and produce recursive forecasts.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "horizon",
+        "p",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "autoregressive_order_selection",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Select the AR(p) order using comparable rolling-origin out-of-sample backtests.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "horizon",
+        "initial_train_size",
+        "max_p",
+        "metric",
+        "min_p",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "bootstrap_mean_confidence_interval",
+      "category": "statistics",
+      "version": "1.0",
+      "description": "Estimate a reproducible percentile bootstrap confidence interval for a population mean.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "coverage",
+        "n_resamples",
+        "random_state",
+        "values"
+      ]
+    },
+    {
+      "name": "breusch_pagan_heteroskedasticity_test",
+      "category": "regression",
+      "version": "1.0",
+      "description": "Diagnose heteroskedasticity in OLS residuals using the Breusch-Pagan Lagrange multiplier test.",
+      "selection_mode": "joint",
+      "analysis_unit": "dataset",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "data",
+        "fit_intercept",
+        "predictor_columns",
+        "significance_level",
+        "target_column"
+      ]
+    },
+    {
+      "name": "cardinality_diagnostic",
+      "category": "validation",
+      "version": "1.0",
+      "description": "Diagnose categorical cardinality, uniqueness, singleton values, and dominant-frequency structure.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "dimension",
+        "text"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "high_cardinality_ratio",
+        "minimum_unique_count",
+        "values"
+      ]
+    },
+    {
+      "name": "categorical_encoding",
+      "category": "preprocessing",
+      "version": "1.0",
+      "description": "Encode categorical columns using deterministic first-seen ordinal encoding or one-hot encoding with explicit missing-value representation.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "dimension",
+        "text"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "missing_label",
+        "strategy",
+        "values"
+      ]
+    },
+    {
+      "name": "chi_square_independence_test",
+      "category": "statistics",
+      "version": "1.0",
+      "description": "Test independence between two categorical variables using Pearson's chi-square statistic and report Cramer's V effect size.",
+      "selection_mode": "joint",
+      "analysis_unit": "dataset",
+      "supported_roles": [
+        "dimension",
+        "text"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "columns",
+        "data"
+      ]
+    },
+    {
+      "name": "conformal_forecast_interval",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Construct symmetric finite-sample conformal-style forecast intervals from rolling-origin absolute forecast errors.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "alpha",
+        "beta",
+        "coverage",
+        "gamma",
+        "horizon",
+        "initial_train_size",
+        "minimum_calibration_observations",
+        "model",
+        "p",
+        "season_length",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "conformal_interval_calibration",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Evaluate leakage-safe historical coverage of finite-sample conformal-style forecast intervals.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "alpha",
+        "beta",
+        "coverage",
+        "gamma",
+        "horizon",
+        "initial_train_size",
+        "minimum_calibration_observations",
+        "model",
+        "p",
+        "season_length",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "constant_column_diagnostic",
+      "category": "validation",
+      "version": "1.0",
+      "description": "Detect constant and quasi-constant columns using the dominance ratio among non-missing observations.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "time",
+        "measure",
+        "dimension",
+        "text"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "dominance_threshold",
+        "values"
+      ]
+    },
+    {
+      "name": "cosine_distance",
+      "category": "similarity",
+      "version": "1.0",
+      "description": "Compute cosine distance as one minus cosine similarity.",
+      "selection_mode": "pairwise",
+      "analysis_unit": "vector",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "name": "cosine_similarity",
+      "category": "similarity",
+      "version": "1.0",
+      "description": "Measure angular similarity between two numerical vectors.",
+      "selection_mode": "pairwise",
+      "analysis_unit": "vector",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "name": "covariance_matrix",
+      "category": "multivariate",
+      "version": "1.0",
+      "description": "Compute the sample covariance matrix of two or more numerical measures.",
+      "selection_mode": "joint",
+      "analysis_unit": "matrix",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "data"
+      ]
+    },
+    {
+      "name": "cross_correlation",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Compute cross-correlation between two ordered numerical series across positive and negative lags.",
+      "selection_mode": "time_series_pairwise",
+      "analysis_unit": "series_pair",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 3,
+      "accepted_parameters": [
+        "max_lag",
+        "x",
+        "y"
+      ]
+    },
+    {
+      "name": "data_quality_report",
+      "category": "validation",
+      "version": "1.0",
+      "description": "Aggregate native data-quality diagnostics into a dataset-level report covering completeness, duplicates, consistency, cardinality, numerical quality, temporal quality, and multicollinearity.",
+      "selection_mode": "joint",
+      "analysis_unit": "dataset",
+      "supported_roles": [
+        "time",
+        "measure",
+        "dimension",
+        "text"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "data"
+      ]
+    },
+    {
+      "name": "descriptive_statistics",
+      "category": "statistics",
+      "version": "1.0",
+      "description": "Compute basic descriptive statistics for a numerical measure.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "values"
+      ]
+    },
+    {
+      "name": "distribution_shape_statistics",
+      "category": "statistics",
+      "version": "1.0",
+      "description": "Calculate moment skewness, excess kurtosis, and finite-sample bias-corrected shape statistics for numerical analytical columns.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "values"
+      ]
+    },
+    {
+      "name": "drift_forecast",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Forecast future observations by extending the average drift between the first and last observation.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "horizon",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "duplicate_row_diagnostic",
+      "category": "validation",
+      "version": "1.0",
+      "description": "Detect exact duplicate rows across compatible analytical columns while preserving missing values during duplicate comparison.",
+      "selection_mode": "joint",
+      "analysis_unit": "dataset",
+      "supported_roles": [
+        "time",
+        "measure",
+        "dimension",
+        "text"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "data"
+      ]
+    },
+    {
+      "name": "dynamic_time_warping",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Measure similarity between two ordered numerical time series using Dynamic Time Warping.",
+      "selection_mode": "time_series_pairwise",
+      "analysis_unit": "series_pair",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 3,
+      "accepted_parameters": [
+        "window",
+        "x",
+        "y"
+      ]
+    },
+    {
+      "name": "empirical_forecast_interval",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Construct empirical forecast intervals from rolling-origin out-of-sample forecast errors.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "alpha",
+        "beta",
+        "coverage",
+        "gamma",
+        "horizon",
+        "initial_train_size",
+        "minimum_interval_observations",
+        "model",
+        "p",
+        "season_length",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "euclidean_distance",
+      "category": "similarity",
+      "version": "1.0",
+      "description": "Compute Euclidean distance between two numerical vectors.",
+      "selection_mode": "pairwise",
+      "analysis_unit": "vector",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "name": "ewma_volatility",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Estimate exponentially weighted volatility from returns or prices using recursive EWMA variance.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "annualization_factor",
+        "decay",
+        "input_kind",
+        "return_type",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "feature_scaling",
+      "category": "preprocessing",
+      "version": "1.0",
+      "description": "Scale numerical features using population z-score standardization or deterministic min-max transformation while preserving missing-value positions.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "feature_range",
+        "strategy",
+        "values"
+      ]
+    },
+    {
+      "name": "first_difference",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Compute first differences of an ordered numerical time series.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "forecast_interval_calibration",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Evaluate empirical forecast interval calibration using leakage-safe rolling-origin forecast errors.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "alpha",
+        "beta",
+        "coverage",
+        "gamma",
+        "horizon",
+        "initial_train_size",
+        "minimum_calibration_observations",
+        "model",
+        "p",
+        "season_length",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "forecast_model_selection",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Compare multiple forecasting models using the same rolling-origin out-of-sample evaluation origins and select the model with the lowest forecast error.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "horizon",
+        "initial_train_size",
+        "metric",
+        "models",
+        "parameters_by_model",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "forecast_strategy_selection",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Compare individual forecasting models and an adaptive weighted ensemble on exactly the same leakage-safe out-of-sample evaluation observations.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "horizon",
+        "initial_train_size",
+        "metric",
+        "minimum_weight_observations",
+        "models",
+        "parameters_by_model",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "holt_linear_trend_forecast",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Forecast a non-seasonal time series with Holt's linear trend method using level and trend smoothing parameters.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "alpha",
+        "beta",
+        "horizon",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "holt_parameter_selection",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Select Holt linear-trend alpha and beta parameters using comparable rolling-origin out-of-sample forecast evaluation.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "alphas",
+        "betas",
+        "horizon",
+        "initial_train_size",
+        "metric",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "holt_winters_additive_forecast",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Forecast a regular time series using additive Holt-Winters level, trend, and seasonal components.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "alpha",
+        "beta",
+        "gamma",
+        "horizon",
+        "season_length",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "holt_winters_additive_parameter_selection",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Select additive Holt-Winters alpha, beta, and gamma parameters using comparable rolling-origin out-of-sample forecast evaluation.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "alphas",
+        "betas",
+        "gammas",
+        "horizon",
+        "initial_train_size",
+        "metric",
+        "season_length",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "jarque_bera_residual_normality_test",
+      "category": "regression",
+      "version": "1.0",
+      "description": "Assess OLS residual normality with the Jarque-Bera test based on residual skewness and excess kurtosis.",
+      "selection_mode": "joint",
+      "analysis_unit": "dataset",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "data",
+        "fit_intercept",
+        "predictor_columns",
+        "target_column"
+      ]
+    },
+    {
+      "name": "lagged_series",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Construct aligned current and lagged observations for an ordered numerical time series.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "lag",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "linear_combination_variance",
+      "category": "multivariate",
+      "version": "1.0",
+      "description": "Compute the variance of a linear combination using w^T Sigma w and decompose each variable's contribution to total variance.",
+      "selection_mode": "joint",
+      "analysis_unit": "matrix",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "data",
+        "weights"
+      ]
+    },
+    {
+      "name": "linear_detrend",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Remove an estimated ordinary-least-squares linear trend from an ordered numerical series.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "linear_trend",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Estimate a linear time trend using ordinary least squares on the ordered observations.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "log_returns",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Compute continuously compounded log returns for a positive ordered numerical series.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "manhattan_distance",
+      "category": "similarity",
+      "version": "1.0",
+      "description": "Compute Manhattan distance between two numerical vectors.",
+      "selection_mode": "pairwise",
+      "analysis_unit": "vector",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "name": "mean_confidence_interval",
+      "category": "statistics",
+      "version": "1.0",
+      "description": "Estimate a two-sided confidence interval for the population mean using the sample standard error and normal approximation.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "coverage",
+        "values"
+      ]
+    },
+    {
+      "name": "mean_shift_change_point",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Detect the strongest single mean-level change point in an ordered numerical time series.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "min_segment_size",
+        "threshold",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "minkowski_distance",
+      "category": "similarity",
+      "version": "1.0",
+      "description": "Compute Minkowski distance of order p between two numerical vectors.",
+      "selection_mode": "pairwise",
+      "analysis_unit": "vector",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "p",
+        "x",
+        "y"
+      ]
+    },
+    {
+      "name": "missing_value_diagnostic",
+      "category": "validation",
+      "version": "1.0",
+      "description": "Diagnose missing values in a column, including missing rate, missing runs, longest missing run, and deterministic severity classification.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "time",
+        "measure",
+        "dimension",
+        "text"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "values"
+      ]
+    },
+    {
+      "name": "missing_value_imputation",
+      "category": "preprocessing",
+      "version": "1.0",
+      "description": "Impute missing values using deterministic mean, median, mode, or constant strategies while reporting exactly which observations changed.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "time",
+        "measure",
+        "dimension",
+        "text"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "fill_value",
+        "strategy",
+        "values"
+      ]
+    },
+    {
+      "name": "moving_average_trend",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Estimate the trend component of an ordered numerical time series using a centered moving average.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "time",
+        "values",
+        "window"
+      ]
+    },
+    {
+      "name": "multicollinearity_diagnostic",
+      "category": "validation",
+      "version": "1.0",
+      "description": "Diagnose multicollinearity across numerical analytical columns using pairwise correlations, condition number, and variance inflation factors.",
+      "selection_mode": "joint",
+      "analysis_unit": "dataset",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "data"
+      ]
+    },
+    {
+      "name": "naive_forecast",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Forecast future observations using the final observed value as a persistence baseline.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "horizon",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "nested_ols_f_test",
+      "category": "regression",
+      "version": "1.0",
+      "description": "Compare restricted and full nested OLS models with a classical partial F-test for the joint significance of added predictors.",
+      "selection_mode": "joint",
+      "analysis_unit": "dataset",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 3,
+      "accepted_parameters": [
+        "data",
+        "fit_intercept",
+        "full_predictors",
+        "restricted_predictors",
+        "target_column"
+      ]
+    },
+    {
+      "name": "newey_west_ols_inference",
+      "category": "regression",
+      "version": "1.0",
+      "description": "Fit OLS and estimate Bartlett-kernel Newey-West heteroskedasticity and autocorrelation consistent coefficient covariance, standard errors, p-values, and confidence intervals.",
+      "selection_mode": "joint",
+      "analysis_unit": "dataset",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "confidence_level",
+        "data",
+        "fit_intercept",
+        "max_lag",
+        "predictor_columns",
+        "small_sample_correction",
+        "target_column"
+      ]
+    },
+    {
+      "name": "non_finite_value_diagnostic",
+      "category": "validation",
+      "version": "1.0",
+      "description": "Diagnose missing, positive infinite, negative infinite, and other non-finite values in a numeric analytical column.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "values"
+      ]
+    },
+    {
+      "name": "numerical_transformation",
+      "category": "preprocessing",
+      "version": "1.0",
+      "description": "Apply deterministic logarithmic and square-root transformations to numerical columns while preserving missing-value positions.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "strategy",
+        "values"
+      ]
+    },
+    {
+      "name": "ols_influence_diagnostic",
+      "category": "regression",
+      "version": "1.0",
+      "description": "Measure OLS observation leverage, standardized residuals, and Cook's distance to identify potentially influential observations.",
+      "selection_mode": "joint",
+      "analysis_unit": "dataset",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "data",
+        "fit_intercept",
+        "predictor_columns",
+        "target_column"
+      ]
+    },
+    {
+      "name": "ols_residual_autocorrelation_diagnostic",
+      "category": "regression",
+      "version": "1.0",
+      "description": "Diagnose ordered OLS residual dependence using the Durbin-Watson statistic and lag-1 residual autocorrelation.",
+      "selection_mode": "joint",
+      "analysis_unit": "dataset",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "data",
+        "fit_intercept",
+        "predictor_columns",
+        "target_column"
+      ]
+    },
+    {
+      "name": "one_sample_mean_t_test",
+      "category": "statistics",
+      "version": "1.0",
+      "description": "Perform a one-sample Student t-test for a population mean with two-sided or directional alternatives.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "alternative",
+        "hypothesized_mean",
+        "values"
+      ]
+    },
+    {
+      "name": "one_sample_proportion_z_test",
+      "category": "statistics",
+      "version": "1.0",
+      "description": "Test a single observed success proportion against a hypothesized population proportion using a normal z approximation.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "measure",
+        "dimension",
+        "text"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "alternative",
+        "hypothesized_proportion",
+        "success_value",
+        "values"
+      ]
+    },
+    {
+      "name": "ordinary_least_squares",
+      "category": "regression",
+      "version": "1.0",
+      "description": "Fit simple or multiple ordinary least squares regression with deterministic least-squares estimation and core goodness-of-fit metrics.",
+      "selection_mode": "joint",
+      "analysis_unit": "dataset",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "data",
+        "fit_intercept",
+        "predictor_columns",
+        "target_column"
+      ]
+    },
+    {
+      "name": "ordinary_least_squares_inference",
+      "category": "regression",
+      "version": "1.0",
+      "description": "Fit ordinary least squares regression and estimate coefficient uncertainty using classical, HC0, or HC1 covariance estimators with t statistics, p-values, and confidence intervals.",
+      "selection_mode": "joint",
+      "analysis_unit": "dataset",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "confidence_level",
+        "covariance_type",
+        "data",
+        "fit_intercept",
+        "predictor_columns",
+        "target_column"
+      ]
+    },
+    {
+      "name": "outlier_diagnostic",
+      "category": "validation",
+      "version": "1.0",
+      "description": "Detect univariate numerical outliers using Tukey IQR fences while preserving original row positions and missing-value information.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "iqr_multiplier",
+        "values"
+      ]
+    },
+    {
+      "name": "paired_mean_difference_t_test",
+      "category": "statistics",
+      "version": "1.0",
+      "description": "Compare paired numerical observations using a paired Student t-test with pairwise missing-value exclusion.",
+      "selection_mode": "joint",
+      "analysis_unit": "dataset",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "alternative",
+        "columns",
+        "data",
+        "hypothesized_difference"
+      ]
+    },
+    {
+      "name": "pearson_correlation",
+      "category": "statistics",
+      "version": "1.0",
+      "description": "Measure the strength and direction of a linear relationship between two numerical measures.",
+      "selection_mode": "pairwise",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "name": "permutation_mean_difference_test",
+      "category": "statistics",
+      "version": "1.0",
+      "description": "Test a difference in independent-sample means using a reproducible Monte Carlo permutation test.",
+      "selection_mode": "joint",
+      "analysis_unit": "dataset",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "alternative",
+        "columns",
+        "data",
+        "n_resamples",
+        "random_state"
+      ]
+    },
+    {
+      "name": "principal_component_analysis",
+      "category": "multivariate",
+      "version": "1.0",
+      "description": "Perform principal component analysis on two or more numerical variables using eigen decomposition.",
+      "selection_mode": "joint",
+      "analysis_unit": "matrix",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "data",
+        "n_components",
+        "standardize"
+      ]
+    },
+    {
+      "name": "rolling_mad_anomaly",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Detect point anomalies using a rolling robust modified z-score based on median absolute deviation from previous observations.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "threshold",
+        "time",
+        "values",
+        "window"
+      ]
+    },
+    {
+      "name": "rolling_origin_forecast_backtest",
+      "category": "timeseries",
+      "version": "1.5",
+      "description": "Evaluate naive, drift, seasonal-naive, autoregressive, simple exponential smoothing, or Holt linear-trend forecasting using expanding-window rolling-origin backtesting without look-ahead leakage.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "alpha",
+        "beta",
+        "gamma",
+        "horizon",
+        "initial_train_size",
+        "model",
+        "p",
+        "season_length",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "rolling_statistics",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Compute rolling mean and sample standard deviation for an ordered numerical series.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "time",
+        "values",
+        "window"
+      ]
+    },
+    {
+      "name": "rolling_volatility",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Compute rolling sample volatility from returns or from prices converted to simple or log returns.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "annualization_factor",
+        "input_kind",
+        "return_type",
+        "time",
+        "values",
+        "window"
+      ]
+    },
+    {
+      "name": "rolling_zscore_anomaly",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Detect point anomalies using a rolling z-score computed strictly from previous observations.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "threshold",
+        "time",
+        "values",
+        "window"
+      ]
+    },
+    {
+      "name": "seasonal_difference",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Compute lag-k seasonal differences of an ordered numerical time series.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "period",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "seasonal_naive_forecast",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Forecast future observations by repeating values from the most recent observed seasonal cycle.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "horizon",
+        "season_length",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "simple_exponential_smoothing_alpha_selection",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Select the simple exponential smoothing alpha using comparable rolling-origin out-of-sample forecast evaluation.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "alphas",
+        "horizon",
+        "initial_train_size",
+        "metric",
+        "stride",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "simple_exponential_smoothing_forecast",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Forecast a non-seasonal time series using simple exponential smoothing with a fixed smoothing parameter alpha.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "alpha",
+        "horizon",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "simple_returns",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Compute period-to-period simple returns for an ordered numerical series.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "spearman_correlation",
+      "category": "statistics",
+      "version": "1.0",
+      "description": "Measure the strength and direction of a monotonic relationship between two numerical measures using ranks.",
+      "selection_mode": "pairwise",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "name": "temporal_quality_diagnostic",
+      "category": "validation",
+      "version": "1.0",
+      "description": "Diagnose temporal-axis quality including timestamp parseability, duplicates, chronological ordering, interval regularity, and temporal gaps.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "time"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "tolerance_ratio",
+        "values"
+      ]
+    },
+    {
+      "name": "temporal_structure_diagnostic",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Diagnose ordering, duplicate timestamps, interval regularity, and temporal gaps.",
+      "selection_mode": "time_axis",
+      "analysis_unit": "timeline",
+      "supported_roles": [
+        "time"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "gap_factor",
+        "time",
+        "tolerance_ratio"
+      ]
+    },
+    {
+      "name": "time_series_stability_diagnostic",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Provide descriptive stability diagnostics for an ordered numerical series. This is not a formal stationarity test such as ADF or KPSS.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "max_abs_lag1_autocorrelation",
+        "max_standardized_mean_shift",
+        "max_standardized_trend_strength",
+        "max_variance_ratio",
+        "time",
+        "values"
+      ]
+    },
+    {
+      "name": "train_test_split",
+      "category": "preprocessing",
+      "version": "1.0",
+      "description": "Split a dataset into deterministic training and test partitions using reproducible random splitting or chronological leakage-safe temporal splitting.",
+      "selection_mode": "joint",
+      "analysis_unit": "dataset",
+      "supported_roles": [
+        "time",
+        "measure",
+        "dimension",
+        "text"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "data",
+        "random_state",
+        "strategy",
+        "test_size",
+        "time_column"
+      ]
+    },
+    {
+      "name": "two_sample_proportion_z_test",
+      "category": "statistics",
+      "version": "1.0",
+      "description": "Compare two independent success proportions using the pooled two-sample proportion z-test.",
+      "selection_mode": "joint",
+      "analysis_unit": "dataset",
+      "supported_roles": [
+        "measure",
+        "dimension",
+        "text"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "alternative",
+        "columns",
+        "data",
+        "success_value"
+      ]
+    },
+    {
+      "name": "type_consistency_diagnostic",
+      "category": "validation",
+      "version": "1.0",
+      "description": "Diagnose heterogeneous value types, numeric values stored as strings, and coercion-compatible type patterns within an analytical column.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "time",
+        "measure",
+        "dimension",
+        "text"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "values"
+      ]
+    },
+    {
+      "name": "variance_diagnostic",
+      "category": "validation",
+      "version": "1.0",
+      "description": "Diagnose zero and near-zero numerical variance using a scale-invariant relative-variance measure.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "relative_variance_threshold",
+        "values"
+      ]
+    },
+    {
+      "name": "variance_shift_change_point",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Detect the strongest single variance-level change in an ordered numerical time series.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "min_segment_size",
+        "time",
+        "values",
+        "variance_ratio_threshold"
+      ]
+    },
+    {
+      "name": "weighted_forecast_ensemble",
+      "category": "timeseries",
+      "version": "1.0",
+      "description": "Combine multiple forecasting models using inverse out-of-sample error weights obtained from comparable rolling-origin evaluation.",
+      "selection_mode": "time_series",
+      "analysis_unit": "series",
+      "supported_roles": [
+        "time",
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "horizon",
+        "initial_train_size",
+        "metric",
+        "models",
+        "parameters_by_model",
+        "stride",
+        "time",
+        "top_k",
+        "values"
+      ]
+    },
+    {
+      "name": "welch_mean_difference_t_test",
+      "category": "statistics",
+      "version": "1.0",
+      "description": "Compare two independent population means using Welch's unequal-variance t-test.",
+      "selection_mode": "joint",
+      "analysis_unit": "dataset",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 2,
+      "accepted_parameters": [
+        "alternative",
+        "columns",
+        "data",
+        "hypothesized_difference"
+      ]
+    },
+    {
+      "name": "winsorization",
+      "category": "preprocessing",
+      "version": "1.0",
+      "description": "Clip numerical observations to configurable lower and upper empirical quantile bounds while preserving missing-value positions.",
+      "selection_mode": "per_column",
+      "analysis_unit": "column",
+      "supported_roles": [
+        "measure"
+      ],
+      "minimum_compatible_columns": 1,
+      "accepted_parameters": [
+        "lower_quantile",
+        "upper_quantile",
+        "values"
+      ]
+    }
+  ]
+}
