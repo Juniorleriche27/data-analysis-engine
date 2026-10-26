@@ -2892,3 +2892,57 @@ def test_pipeline_executes_constant_column_diagnostic():
         ]
         is True
     )
+
+
+def test_pipeline_executes_duplicate_row_diagnostic_with_missing_values():
+    dataframe = pd.DataFrame(
+        {
+            "category": [
+                "A",
+                "A",
+                "B",
+                "C",
+            ],
+            "value": [
+                None,
+                None,
+                20,
+                30,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "duplicate_row_diagnostic",
+        ],
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert diagnostic[
+        "total_count"
+    ] == 4
+
+    assert diagnostic[
+        "missing_cell_count"
+    ] == 2
+
+    assert diagnostic[
+        "duplicate_row_count"
+    ] == 2
+
+    assert diagnostic[
+        "excess_duplicate_count"
+    ] == 1
+
+    assert result.rows_dropped == 0

@@ -254,7 +254,17 @@ class AnalysisExecutor:
             )
 
         if task.selection_mode == "joint":
-            cleaned = selected.dropna()
+            preserve_missing_values = (
+                self._method_preserves_missing_values(
+                    task.method
+                )
+            )
+
+            cleaned = (
+                selected
+                if preserve_missing_values
+                else selected.dropna()
+            )
 
             data = {
                 column: self._series_to_python_list(

@@ -2221,3 +2221,41 @@ def test_router_discovers_constant_column_diagnostic():
         "constant_column_diagnostic"
         in candidates
     )
+
+
+def test_router_discovers_duplicate_row_diagnostic():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "category": [
+                    "A",
+                    "A",
+                    "B",
+                    "C",
+                ],
+                "value": [
+                    10,
+                    10,
+                    20,
+                    30,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "duplicate_row_diagnostic"
+        in candidates
+    )
