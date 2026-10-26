@@ -178,6 +178,8 @@ class AIAnalysisCall:
     call_id: str
     method: str
     parameters: dict[str, Any]
+    objective: str = ""
+    reason: str = ""
     bindings: dict[str, Any] = field(
         default_factory=dict
     )
@@ -201,6 +203,8 @@ class AIAnalysisCall:
             "call_id",
             "method",
             "parameters",
+            "objective",
+            "reason",
             "bindings",
         }
 
@@ -260,6 +264,17 @@ class AIAnalysisCall:
                 f"Unknown analytical method: '{method}'."
             )
 
+        objective = payload.get("objective", "")
+        if "objective" in payload and (not isinstance(objective, str) or not objective.strip()):
+            raise AIOrchestrationContractError("'objective' must be a non-empty string when provided.")
+
+        reason = payload.get("reason", "")
+        if "reason" in payload and (not isinstance(reason, str) or not reason.strip()):
+            raise AIOrchestrationContractError("'reason' must be a non-empty string when provided.")
+
+        objective = objective.strip() if isinstance(objective, str) else ""
+        reason = reason.strip() if isinstance(reason, str) else ""
+
         parameters = payload.get(
             "parameters",
             {},
@@ -293,6 +308,8 @@ class AIAnalysisCall:
             call_id=call_id.strip(),
             method=method,
             parameters=normalized_parameters,
+            objective=objective,
+            reason=reason,
             bindings=bindings,
         )
 
@@ -305,6 +322,8 @@ class AIAnalysisCall:
             "parameters": dict(
                 self.parameters
             ),
+            "objective": self.objective,
+            "reason": self.reason,
             "bindings": dict(
                 self.bindings
             ),

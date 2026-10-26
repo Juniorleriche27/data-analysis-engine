@@ -311,3 +311,56 @@ def test_ai_executor_delegates_to_native_engine():
         DataAnalysisEngine()
         .available_methods()
     ) == 95
+
+
+def test_ai_call_preserves_objective_and_reason():
+    plan = AIAnalysisPlan.from_mapping(
+        {
+            "plan_id": "traceable-plan",
+            "calls": [{
+                "call_id": "call-1",
+                "method": "advanced_quantiles",
+                "objective": "  Measure the central sales level  ",
+                "reason": "  Median is robust to extreme values  ",
+                "parameters": {"values": [1.0, 2.0, 3.0]},
+            }],
+        },
+        registered_methods=registered_methods(),
+    )
+    call = plan.calls[0]
+    assert call.objective == "Measure the central sales level"
+    assert call.reason == "Median is robust to extreme values"
+    assert call.as_dict()["objective"] == call.objective
+    assert call.as_dict()["reason"] == call.reason
+
+
+def test_ai_call_rejects_empty_objective():
+    with pytest.raises(AIOrchestrationContractError):
+        AIAnalysisPlan.from_mapping(
+            {
+                "plan_id": "bad-objective",
+                "calls": [{
+                    "call_id": "call-1",
+                    "method": "advanced_quantiles",
+                    "objective": "   ",
+                    "parameters": {"values": [1.0, 2.0, 3.0]},
+                }],
+            },
+            registered_methods=registered_methods(),
+        )
+
+
+def test_ai_call_rejects_empty_reason():
+    with pytest.raises(AIOrchestrationContractError):
+        AIAnalysisPlan.from_mapping(
+            {
+                "plan_id": "bad-reason",
+                "calls": [{
+                    "call_id": "call-1",
+                    "method": "advanced_quantiles",
+                    "reason": "   ",
+                    "parameters": {"values": [1.0, 2.0, 3.0]},
+                }],
+            },
+            registered_methods=registered_methods(),
+        )
