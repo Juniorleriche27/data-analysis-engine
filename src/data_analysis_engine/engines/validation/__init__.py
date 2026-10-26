@@ -18,10 +18,15 @@ from data_analysis_engine.engines.validation.outliers import (
     OutlierDiagnostic,
 )
 
+from data_analysis_engine.engines.validation.cardinality import (
+    CardinalityDiagnostic,
+)
+
 __all__ = [
     "MissingValueDiagnostic",
     "ConstantColumnDiagnostic",
     "DuplicateRowDiagnostic",
     "NonFiniteValueDiagnostic",
     "OutlierDiagnostic",
+    "CardinalityDiagnostic",
 ]

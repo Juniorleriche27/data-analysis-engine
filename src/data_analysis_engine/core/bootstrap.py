@@ -163,6 +163,11 @@ from data_analysis_engine.engines.validation.outliers import (
     OutlierDiagnostic,
 )
 
+
+from data_analysis_engine.engines.validation.cardinality import (
+    CardinalityDiagnostic,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -228,6 +233,7 @@ BUILTIN_METHODS = (
     DuplicateRowDiagnostic,
     NonFiniteValueDiagnostic,
     OutlierDiagnostic,
+    CardinalityDiagnostic,
 )
 
 

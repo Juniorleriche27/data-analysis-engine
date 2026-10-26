@@ -2375,3 +2375,45 @@ def test_router_discovers_outlier_diagnostic():
         "outlier_diagnostic"
         in candidates
     )
+
+
+def test_router_discovers_cardinality_diagnostic():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "category": [
+                    "A",
+                    "A",
+                    "B",
+                    "B",
+                    "C",
+                    "C",
+                ],
+                "sales": [
+                    10,
+                    20,
+                    30,
+                    40,
+                    50,
+                    60,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "cardinality_diagnostic"
+        in candidates
+    )

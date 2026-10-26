@@ -3094,3 +3094,35 @@ def test_pipeline_executes_outlier_diagnostic():
         ]
         is True
     )
+
+
+def test_pipeline_executes_cardinality_diagnostic():
+    dataframe = pd.DataFrame(
+        {
+            "category": [
+                "A",
+                "A",
+                "B",
+                "B",
+                "C",
+                "C",
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "cardinality_diagnostic",
+        ],
+    )
+
+    result = report.execution.results[0]
+
+    assert result.status == "success"
+
+    diagnostic = result.result["result"]
+
+    assert diagnostic["unique_count"] == 3
+    assert diagnostic["non_missing_count"] == 6
+    assert diagnostic["cardinality_status"] == "normal"
