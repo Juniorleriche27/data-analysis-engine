@@ -276,6 +276,13 @@ from data_analysis_engine.engines.regression.ols_inference import (
     OrdinaryLeastSquaresInference,
 )
 
+
+from data_analysis_engine.engines.regression.diagnostics import (
+    BreuschPaganHeteroskedasticityTest,
+    OLSResidualAutocorrelationDiagnostic,
+    OLSInfluenceDiagnostic,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -366,6 +373,9 @@ BUILTIN_METHODS = (
     ChiSquareIndependenceTest,
     OrdinaryLeastSquares,
     OrdinaryLeastSquaresInference,
+    BreuschPaganHeteroskedasticityTest,
+    OLSResidualAutocorrelationDiagnostic,
+    OLSInfluenceDiagnostic,
 )
 
 

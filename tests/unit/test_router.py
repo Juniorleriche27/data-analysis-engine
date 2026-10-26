@@ -3287,3 +3287,117 @@ def test_router_discovers_ordinary_least_squares_inference():
         "ordinary_least_squares_inference"
         in candidates
     )
+
+
+def test_router_discovers_breusch_pagan_heteroskedasticity_test():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                    50.0,
+                ],
+                "marketing": [
+                    2.0,
+                    5.0,
+                    7.0,
+                    9.0,
+                    12.0,
+                ],
+            }
+        )
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in AnalyticalRouter().route(
+            profile
+        ).candidates
+    }
+
+    assert (
+        "breusch_pagan_heteroskedasticity_test"
+        in candidates
+    )
+
+
+def test_router_discovers_ols_residual_autocorrelation_diagnostic():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                    50.0,
+                ],
+                "marketing": [
+                    2.0,
+                    5.0,
+                    7.0,
+                    9.0,
+                    12.0,
+                ],
+            }
+        )
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in AnalyticalRouter().route(
+            profile
+        ).candidates
+    }
+
+    assert (
+        "ols_residual_autocorrelation_diagnostic"
+        in candidates
+    )
+
+
+def test_router_discovers_ols_influence_diagnostic():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                    50.0,
+                ],
+                "marketing": [
+                    2.0,
+                    5.0,
+                    7.0,
+                    9.0,
+                    12.0,
+                ],
+            }
+        )
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in AnalyticalRouter().route(
+            profile
+        ).candidates
+    }
+
+    assert (
+        "ols_influence_diagnostic"
+        in candidates
+    )

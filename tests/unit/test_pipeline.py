@@ -4281,3 +4281,162 @@ def test_pipeline_executes_ordinary_least_squares_inference():
     ][
         "p_value"
     ] <= 1.0
+
+
+def test_pipeline_executes_breusch_pagan_test():
+    dataframe = pd.DataFrame(
+        {
+            "x": [
+                1.0,
+                2.0,
+                3.0,
+                4.0,
+                5.0,
+                6.0,
+            ],
+            "y": [
+                2.2,
+                4.1,
+                6.4,
+                7.8,
+                10.3,
+                12.0,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "breusch_pagan_heteroskedasticity_test",
+        ],
+        parameters_by_method={
+            "breusch_pagan_heteroskedasticity_test": {
+                "target_column": "y",
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert (
+        0.0
+        <= diagnostic[
+            "p_value"
+        ]
+        <= 1.0
+    )
+
+
+def test_pipeline_executes_residual_autocorrelation_diagnostic():
+    dataframe = pd.DataFrame(
+        {
+            "x": [
+                1.0,
+                2.0,
+                3.0,
+                4.0,
+                5.0,
+                6.0,
+            ],
+            "y": [
+                2.1,
+                4.3,
+                5.8,
+                8.4,
+                9.7,
+                12.2,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "ols_residual_autocorrelation_diagnostic",
+        ],
+        parameters_by_method={
+            "ols_residual_autocorrelation_diagnostic": {
+                "target_column": "y",
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert diagnostic[
+        "order_sensitive"
+    ] is True
+
+
+def test_pipeline_executes_ols_influence_diagnostic():
+    dataframe = pd.DataFrame(
+        {
+            "x": [
+                1.0,
+                2.0,
+                3.0,
+                4.0,
+                5.0,
+                6.0,
+            ],
+            "y": [
+                2.1,
+                4.2,
+                5.8,
+                8.1,
+                10.0,
+                17.0,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "ols_influence_diagnostic",
+        ],
+        parameters_by_method={
+            "ols_influence_diagnostic": {
+                "target_column": "y",
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert len(
+        diagnostic[
+            "leverage"
+        ]
+    ) == 6
+
+    assert len(
+        diagnostic[
+            "cooks_distance"
+        ]
+    ) == 6
