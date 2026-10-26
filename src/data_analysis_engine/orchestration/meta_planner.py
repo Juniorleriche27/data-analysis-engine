@@ -133,7 +133,14 @@ class MetaAnalysisPlanner:
                 "method configuration. "
                 "Do not use parameter keys named 'data' "
                 "or 'values'; the application will bind "
-                "the real dataset after planning."
+                "the real dataset after planning. "
+                "Use the separate bindings object to map "
+                "native data inputs to dataset column names. "
+                "Examples: bindings={values: sales} for a "
+                "single-column method, or bindings={data: "
+                "[x, y]} for a multi-column method. "
+                "Bindings contain column names only, never "
+                "raw dataset values."
             ),
         }
 
