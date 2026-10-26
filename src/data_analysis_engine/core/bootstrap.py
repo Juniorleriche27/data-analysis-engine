@@ -158,6 +158,11 @@ from data_analysis_engine.engines.timeseries.volatility import (
 )
 
 
+
+from data_analysis_engine.engines.validation.outliers import (
+    OutlierDiagnostic,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -222,6 +227,7 @@ BUILTIN_METHODS = (
     ConstantColumnDiagnostic,
     DuplicateRowDiagnostic,
     NonFiniteValueDiagnostic,
+    OutlierDiagnostic,
 )
 
 

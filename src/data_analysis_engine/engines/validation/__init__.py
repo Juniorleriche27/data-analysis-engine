@@ -14,9 +14,14 @@ from data_analysis_engine.engines.validation.non_finite import (
     NonFiniteValueDiagnostic,
 )
 
+from data_analysis_engine.engines.validation.outliers import (
+    OutlierDiagnostic,
+)
+
 __all__ = [
     "MissingValueDiagnostic",
     "ConstantColumnDiagnostic",
     "DuplicateRowDiagnostic",
     "NonFiniteValueDiagnostic",
+    "OutlierDiagnostic",
 ]

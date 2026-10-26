@@ -2337,3 +2337,41 @@ def test_router_discovers_constant_column_diagnostic():
         "constant_column_diagnostic"
         in candidates
     )
+
+
+def test_router_discovers_outlier_diagnostic():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    11.0,
+                    12.0,
+                    100.0,
+                ],
+                "category": [
+                    "A",
+                    "B",
+                    "C",
+                    "D",
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "outlier_diagnostic"
+        in candidates
+    )

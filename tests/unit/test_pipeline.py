@@ -3048,3 +3048,49 @@ def test_pipeline_executes_constant_column_diagnostic():
     assert diagnostic[
         "variability_status"
     ] == "near_constant"
+
+
+def test_pipeline_executes_outlier_diagnostic():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [
+                10.0,
+                11.0,
+                12.0,
+                13.0,
+                100.0,
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "outlier_diagnostic",
+        ],
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert diagnostic[
+        "outlier_count"
+    ] == 1
+
+    assert diagnostic[
+        "outlier_positions"
+    ] == [4]
+
+    assert (
+        diagnostic[
+            "has_outliers"
+        ]
+        is True
+    )
