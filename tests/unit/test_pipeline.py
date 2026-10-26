@@ -3308,3 +3308,54 @@ def test_pipeline_executes_multicollinearity_diagnostic():
             "vif_by_column"
         ]
     )
+
+
+def test_pipeline_executes_data_quality_report():
+    dataframe = pd.DataFrame(
+        {
+            "sales": [
+                10.0,
+                20.0,
+                30.0,
+                40.0,
+            ],
+            "category": [
+                "A",
+                "B",
+                "A",
+                "B",
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "data_quality_report",
+        ],
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert diagnostic[
+        "row_count"
+    ] == 4
+
+    assert diagnostic[
+        "column_count"
+    ] == 2
+
+    assert (
+        "duplicate_rows"
+        in diagnostic[
+            "dataset_checks"
+        ]
+    )

@@ -2581,3 +2581,41 @@ def test_router_discovers_multicollinearity_diagnostic():
         "multicollinearity_diagnostic"
         in candidates
     )
+
+
+def test_router_discovers_data_quality_report():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10,
+                    20,
+                    30,
+                    40,
+                ],
+                "category": [
+                    "A",
+                    "B",
+                    "A",
+                    "B",
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "data_quality_report"
+        in candidates
+    )

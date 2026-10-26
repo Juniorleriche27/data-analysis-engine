@@ -38,6 +38,10 @@ from data_analysis_engine.engines.validation.multicollinearity import (
     MulticollinearityDiagnostic,
 )
 
+from data_analysis_engine.engines.validation.quality_report import (
+    DataQualityReport,
+)
+
 __all__ = [
     "MissingValueDiagnostic",
     "ConstantColumnDiagnostic",
@@ -49,4 +53,5 @@ __all__ = [
     "TemporalQualityDiagnostic",
     "VarianceDiagnostic",
     "MulticollinearityDiagnostic",
+    "DataQualityReport",
 ]

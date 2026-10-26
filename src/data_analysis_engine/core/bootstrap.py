@@ -188,6 +188,11 @@ from data_analysis_engine.engines.validation.multicollinearity import (
     MulticollinearityDiagnostic,
 )
 
+
+from data_analysis_engine.engines.validation.quality_report import (
+    DataQualityReport,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -258,6 +263,7 @@ BUILTIN_METHODS = (
     TemporalQualityDiagnostic,
     VarianceDiagnostic,
     MulticollinearityDiagnostic,
+    DataQualityReport,
 )
 
 
