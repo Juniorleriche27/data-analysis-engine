@@ -3247,3 +3247,43 @@ def test_router_discovers_ordinary_least_squares():
         "ordinary_least_squares"
         in candidates
     )
+
+
+def test_router_discovers_ordinary_least_squares_inference():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                    50.0,
+                ],
+                "marketing": [
+                    2.0,
+                    5.0,
+                    7.0,
+                    9.0,
+                    12.0,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "ordinary_least_squares_inference"
+        in candidates
+    )

@@ -4212,3 +4212,72 @@ def test_pipeline_executes_ordinary_least_squares():
     ] == pytest.approx(
         1.0
     )
+
+
+def test_pipeline_executes_ordinary_least_squares_inference():
+    dataframe = pd.DataFrame(
+        {
+            "marketing": [
+                1.0,
+                2.0,
+                3.0,
+                4.0,
+                5.0,
+                6.0,
+            ],
+            "sales": [
+                4.1,
+                6.2,
+                7.8,
+                10.3,
+                11.9,
+                14.1,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "ordinary_least_squares_inference",
+        ],
+        parameters_by_method={
+            "ordinary_least_squares_inference": {
+                "target_column": "sales",
+                "predictor_columns": [
+                    "marketing",
+                ],
+                "covariance_type": "hc1",
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    model = result.result[
+        "result"
+    ]
+
+    assert model[
+        "covariance_type"
+    ] == "hc1"
+
+    assert model[
+        "coefficients"
+    ][
+        "marketing"
+    ][
+        "standard_error"
+    ] > 0.0
+
+    assert 0.0 <= model[
+        "coefficients"
+    ][
+        "marketing"
+    ][
+        "p_value"
+    ] <= 1.0
