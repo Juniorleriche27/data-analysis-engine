@@ -3401,3 +3401,124 @@ def test_router_discovers_ols_influence_diagnostic():
         "ols_influence_diagnostic"
         in candidates
     )
+
+
+def test_router_discovers_newey_west_ols_inference():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                    50.0,
+                ],
+                "marketing": [
+                    2.0,
+                    5.0,
+                    7.0,
+                    9.0,
+                    12.0,
+                ],
+            }
+        )
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in AnalyticalRouter().route(
+            profile
+        ).candidates
+    }
+
+    assert (
+        "newey_west_ols_inference"
+        in candidates
+    )
+
+
+def test_router_discovers_nested_ols_f_test():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                    50.0,
+                ],
+                "marketing": [
+                    2.0,
+                    5.0,
+                    7.0,
+                    9.0,
+                    12.0,
+                ],
+                "price": [
+                    8.0,
+                    7.0,
+                    6.0,
+                    5.0,
+                    4.0,
+                ],
+            }
+        )
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in AnalyticalRouter().route(
+            profile
+        ).candidates
+    }
+
+    assert (
+        "nested_ols_f_test"
+        in candidates
+    )
+
+
+def test_router_discovers_jarque_bera_residual_normality_test():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "sales": [
+                    10.0,
+                    20.0,
+                    30.0,
+                    40.0,
+                    50.0,
+                ],
+                "marketing": [
+                    2.0,
+                    5.0,
+                    7.0,
+                    9.0,
+                    12.0,
+                ],
+            }
+        )
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in AnalyticalRouter().route(
+            profile
+        ).candidates
+    }
+
+    assert (
+        "jarque_bera_residual_normality_test"
+        in candidates
+    )

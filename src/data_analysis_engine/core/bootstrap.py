@@ -283,6 +283,13 @@ from data_analysis_engine.engines.regression.diagnostics import (
     OLSInfluenceDiagnostic,
 )
 
+
+from data_analysis_engine.engines.regression.econometrics import (
+    NeweyWestOLSInference,
+    NestedOLSFTest,
+    JarqueBeraResidualNormalityTest,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -376,6 +383,9 @@ BUILTIN_METHODS = (
     BreuschPaganHeteroskedasticityTest,
     OLSResidualAutocorrelationDiagnostic,
     OLSInfluenceDiagnostic,
+    NeweyWestOLSInference,
+    NestedOLSFTest,
+    JarqueBeraResidualNormalityTest,
 )
 
 

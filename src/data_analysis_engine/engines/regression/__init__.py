@@ -12,10 +12,19 @@ from data_analysis_engine.engines.regression.diagnostics import (
     OLSInfluenceDiagnostic,
 )
 
+from data_analysis_engine.engines.regression.econometrics import (
+    NeweyWestOLSInference,
+    NestedOLSFTest,
+    JarqueBeraResidualNormalityTest,
+)
+
 __all__ = [
     "OrdinaryLeastSquares",
     "OrdinaryLeastSquaresInference",
     "BreuschPaganHeteroskedasticityTest",
     "OLSResidualAutocorrelationDiagnostic",
     "OLSInfluenceDiagnostic",
+    "NeweyWestOLSInference",
+    "NestedOLSFTest",
+    "JarqueBeraResidualNormalityTest",
 ]

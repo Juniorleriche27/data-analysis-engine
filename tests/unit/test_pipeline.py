@@ -4440,3 +4440,188 @@ def test_pipeline_executes_ols_influence_diagnostic():
             "cooks_distance"
         ]
     ) == 6
+
+
+def test_pipeline_executes_newey_west_ols_inference():
+    dataframe = pd.DataFrame(
+        {
+            "x": [
+                1.0,
+                2.0,
+                3.0,
+                4.0,
+                5.0,
+                6.0,
+            ],
+            "y": [
+                2.2,
+                4.0,
+                6.3,
+                8.1,
+                10.4,
+                12.0,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "newey_west_ols_inference",
+        ],
+        parameters_by_method={
+            "newey_west_ols_inference": {
+                "target_column": "y",
+                "max_lag": 1,
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    model = result.result[
+        "result"
+    ]
+
+    assert model[
+        "covariance_type"
+    ] == "newey_west_hac"
+
+    assert model[
+        "max_lag"
+    ] == 1
+
+
+def test_pipeline_executes_nested_ols_f_test():
+    dataframe = pd.DataFrame(
+        {
+            "x1": [
+                1.0,
+                2.0,
+                3.0,
+                4.0,
+                5.0,
+                6.0,
+            ],
+            "x2": [
+                2.0,
+                5.0,
+                1.0,
+                6.0,
+                3.0,
+                8.0,
+            ],
+            "y": [
+                7.0,
+                16.0,
+                10.0,
+                23.0,
+                18.0,
+                31.0,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "nested_ols_f_test",
+        ],
+        parameters_by_method={
+            "nested_ols_f_test": {
+                "target_column": "y",
+                "restricted_predictors": [
+                    "x1",
+                ],
+                "full_predictors": [
+                    "x1",
+                    "x2",
+                ],
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    statistics = result.result[
+        "result"
+    ]
+
+    assert statistics[
+        "restriction_count"
+    ] == 1
+
+    assert statistics[
+        "rss_full"
+    ] <= statistics[
+        "rss_restricted"
+    ]
+
+
+def test_pipeline_executes_jarque_bera_residual_normality_test():
+    dataframe = pd.DataFrame(
+        {
+            "x": [
+                1.0,
+                2.0,
+                3.0,
+                4.0,
+                5.0,
+                6.0,
+                7.0,
+                8.0,
+            ],
+            "y": [
+                2.2,
+                4.0,
+                6.3,
+                8.1,
+                10.2,
+                11.9,
+                14.1,
+                16.3,
+            ],
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "jarque_bera_residual_normality_test",
+        ],
+        parameters_by_method={
+            "jarque_bera_residual_normality_test": {
+                "target_column": "y",
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    diagnostic = result.result[
+        "result"
+    ]
+
+    assert diagnostic[
+        "jarque_bera_statistic"
+    ] >= 0.0
+
+    assert (
+        0.0
+        <= diagnostic[
+            "p_value"
+        ]
+        <= 1.0
+    )
