@@ -213,6 +213,11 @@ from data_analysis_engine.engines.preprocessing.winsorization import (
     Winsorization,
 )
 
+
+from data_analysis_engine.engines.preprocessing.categorical_encoding import (
+    CategoricalEncoding,
+)
+
 BUILTIN_METHODS = (
     DescriptiveStatistics,
     PearsonCorrelation,
@@ -288,6 +293,7 @@ BUILTIN_METHODS = (
     FeatureScaling,
     NumericalTransformation,
     Winsorization,
+    CategoricalEncoding,
 )
 
 

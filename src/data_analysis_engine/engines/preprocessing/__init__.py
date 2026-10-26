@@ -14,9 +14,14 @@ from data_analysis_engine.engines.preprocessing.winsorization import (
     Winsorization,
 )
 
+from data_analysis_engine.engines.preprocessing.categorical_encoding import (
+    CategoricalEncoding,
+)
+
 __all__ = [
     "MissingValueImputation",
     "FeatureScaling",
     "NumericalTransformation",
     "Winsorization",
+    "CategoricalEncoding",
 ]

@@ -3547,3 +3547,53 @@ def test_pipeline_executes_winsorization():
             44.0,
         ]
     )
+
+
+def test_pipeline_executes_categorical_encoding():
+    dataframe = pd.DataFrame(
+        {
+            "category": [
+                "A",
+                "B",
+                "A",
+            ]
+        }
+    )
+
+    report = DataAnalysisPipeline().analyze_dataframe(
+        dataframe,
+        methods=[
+            "categorical_encoding",
+        ],
+        parameters_by_method={
+            "categorical_encoding": {
+                "strategy": "one_hot",
+            }
+        },
+    )
+
+    result = report.execution.results[
+        0
+    ]
+
+    assert result.status == "success"
+
+    transformed = result.result[
+        "result"
+    ]
+
+    assert transformed[
+        "encoded_columns"
+    ]["A"] == [
+        1,
+        0,
+        1,
+    ]
+
+    assert transformed[
+        "encoded_columns"
+    ]["B"] == [
+        0,
+        1,
+        0,
+    ]

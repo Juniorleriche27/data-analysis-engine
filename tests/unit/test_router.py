@@ -2759,3 +2759,41 @@ def test_router_discovers_winsorization():
         "winsorization"
         in candidates
     )
+
+
+def test_router_discovers_categorical_encoding():
+    DataAnalysisEngine()
+
+    profile = build_profile(
+        pd.DataFrame(
+            {
+                "category": [
+                    "A",
+                    "B",
+                    "A",
+                    "C",
+                ],
+                "sales": [
+                    10,
+                    20,
+                    30,
+                    40,
+                ],
+            }
+        )
+    )
+
+    report = AnalyticalRouter().route(
+        profile
+    )
+
+    candidates = {
+        candidate.method
+        for candidate
+        in report.candidates
+    }
+
+    assert (
+        "categorical_encoding"
+        in candidates
+    )
