@@ -267,6 +267,11 @@ from data_analysis_engine.engines.inference.chi_square import (
 )
 
 
+from data_analysis_engine.engines.inference.anova import (
+    OneWayANOVA,
+)
+
+
 from data_analysis_engine.engines.regression.ols import (
     OrdinaryLeastSquares,
 )
@@ -378,6 +383,7 @@ BUILTIN_METHODS = (
     OneSampleProportionZTest,
     TwoSampleProportionZTest,
     ChiSquareIndependenceTest,
+    OneWayANOVA,
     OrdinaryLeastSquares,
     OrdinaryLeastSquaresInference,
     BreuschPaganHeteroskedasticityTest,

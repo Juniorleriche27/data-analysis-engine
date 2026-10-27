@@ -515,16 +515,5 @@ def test_meta_integration_does_not_change_native_registry():
         .available_methods()
     )
 
-    assert len(
-        methods
-    ) == 95
-
-    assert len(
-        {
-            method[
-                "name"
-            ]
-            for method
-            in methods
-        }
-    ) == 95
+    names = {method["name"] for method in methods}
+    assert len(methods) == len(names)

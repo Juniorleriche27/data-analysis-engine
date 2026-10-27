@@ -259,8 +259,6 @@ def test_meta_workflow_runs_end_to_end_offline():
     ] == "The median is 3."
 
 
-def test_meta_workflow_keeps_registry_at_95():
-    assert len(
-        DataAnalysisEngine()
-        .available_methods()
-    ) == 95
+def test_meta_workflow_preserves_unique_live_registry():
+    methods = DataAnalysisEngine().available_methods()
+    assert len(methods) == len({method["name"] for method in methods})

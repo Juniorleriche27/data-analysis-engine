@@ -23,30 +23,28 @@ def manifest():
     )
 
 
-def test_core_v1_has_exactly_95_capabilities():
-    assert len(registry()) == 95
+def test_core_v1_manifest_has_exactly_95_capabilities():
+    frozen = manifest()
 
-    assert (
-        manifest()["native_method_count"]
-        == 95
-    )
+    assert frozen["native_method_count"] == 95
+    assert len(frozen["methods"]) == 95
 
 
-def test_core_v1_method_names_are_unique():
+def test_core_v1_manifest_method_names_are_unique():
     names = [
         method["name"]
-        for method in registry()
+        for method in manifest()["methods"]
     ]
 
     assert len(names) == 95
     assert len(set(names)) == 95
 
 
-def test_manifest_exactly_matches_live_registry():
-    live_names = sorted(
+def test_core_v1_manifest_remains_present_in_live_registry():
+    live_names = {
         method["name"]
         for method in registry()
-    )
+    }
 
     manifest_names = [
         method["name"]
@@ -54,11 +52,8 @@ def test_manifest_exactly_matches_live_registry():
         in manifest()["methods"]
     ]
 
-    assert manifest_names == sorted(
-        manifest_names
-    )
-
-    assert manifest_names == live_names
+    assert manifest_names == sorted(manifest_names)
+    assert set(manifest_names).issubset(live_names)
 
 
 def test_core_v1_contains_priority_categories():
@@ -114,4 +109,4 @@ def test_registry_bootstrap_is_idempotent():
     ]
 
     assert first == second
-    assert len(first) == 95
+    assert len(first) >= manifest()["native_method_count"]

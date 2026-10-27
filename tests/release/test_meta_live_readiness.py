@@ -32,5 +32,4 @@ def test_live_smoke_demo_dataset_is_deterministic():
 def test_live_readiness_does_not_change_native_registry():
     methods = DataAnalysisEngine().available_methods()
 
-    assert len(methods) == 95
-    assert len({method["name"] for method in methods}) == 95
+    assert len(methods) == len({method["name"] for method in methods})

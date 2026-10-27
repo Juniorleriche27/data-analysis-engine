@@ -137,7 +137,7 @@ def build_ai_orchestration_catalog(
 
     return {
         "schema_version": "1.0",
-        "engine_release": "core-v1",
+        "engine_release": "core-v1+hackathon",
         "native_method_count": len(
             methods
         ),

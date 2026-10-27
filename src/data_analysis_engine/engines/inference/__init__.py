@@ -33,6 +33,10 @@ from data_analysis_engine.engines.inference.chi_square import (
     ChiSquareIndependenceTest,
 )
 
+from data_analysis_engine.engines.inference.anova import (
+    OneWayANOVA,
+)
+
 __all__ = [
     "DistributionShapeStatistics",
     "AdvancedQuantiles",
@@ -45,4 +49,5 @@ __all__ = [
     "OneSampleProportionZTest",
     "TwoSampleProportionZTest",
     "ChiSquareIndependenceTest",
+    "OneWayANOVA",
 ]
