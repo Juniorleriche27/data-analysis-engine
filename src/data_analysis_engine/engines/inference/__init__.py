@@ -37,6 +37,10 @@ from data_analysis_engine.engines.inference.anova import (
     OneWayANOVA,
 )
 
+from data_analysis_engine.engines.inference.nonparametric import (
+    MannWhitneyUTest,
+)
+
 __all__ = [
     "DistributionShapeStatistics",
     "AdvancedQuantiles",
@@ -50,4 +54,5 @@ __all__ = [
     "TwoSampleProportionZTest",
     "ChiSquareIndependenceTest",
     "OneWayANOVA",
+    "MannWhitneyUTest",
 ]

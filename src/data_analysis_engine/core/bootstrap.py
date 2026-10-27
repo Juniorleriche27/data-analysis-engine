@@ -272,6 +272,11 @@ from data_analysis_engine.engines.inference.anova import (
 )
 
 
+from data_analysis_engine.engines.inference.nonparametric import (
+    MannWhitneyUTest,
+)
+
+
 from data_analysis_engine.engines.regression.ols import (
     OrdinaryLeastSquares,
 )
@@ -384,6 +389,7 @@ BUILTIN_METHODS = (
     TwoSampleProportionZTest,
     ChiSquareIndependenceTest,
     OneWayANOVA,
+    MannWhitneyUTest,
     OrdinaryLeastSquares,
     OrdinaryLeastSquaresInference,
     BreuschPaganHeteroskedasticityTest,
